@@ -6,7 +6,7 @@ Tested on November 25, 2026, against the static application served by `npm start
 
 Run `npm test` with Node.js 22 or newer. The suite uses the actual game modules and bundled Three.js, with small fixtures for browser storage and survey notifications.
 
-All **24 tests passed**:
+All **27 tests passed**:
 
 1. Exactly five systems and 24 unique, fully configured planets.
 2. Translation in all six directions and roll input.
@@ -32,8 +32,11 @@ All **24 tests passed**:
 22. Avoidance with gradual braking, bounded turning speed, visible banking, and no forced upward movement at 30, 60, and 144 simulation steps per second.
 23. Autopilot orientation continuity when turning through vertical headings.
 24. Twenty-one Solar System routes from Earth, Venus, and Saturn, including neighbouring planets, moons, and the Sun as collision obstacles.
+25. Independent master, music, and effects gain paths, with mute preserving channel settings.
+26. Music and sound-effect previews routed through the appropriate volume controls.
+27. A distinct boost onset and recurring scanner pulses that stop outside active scanning.
 
-The latest autopilot revision replaces per-frame upward avoidance impulses and a fixed 48 km/s slowdown with persistent lateral waypoints, bounded velocity changes, roll-preserving turns, and animated banking. These changes were checked through the regression suite; the earlier manual browser observations below describe the original exploration checks.
+The latest autopilot revision replaces per-frame upward avoidance impulses and a fixed 48 km/s slowdown with persistent lateral waypoints, bounded velocity changes, roll-preserving turns, and animated banking. The audio revision increases audible frequency content, adds distinct event sounds, and provides channel preview buttons. Both preview buttons were clicked in the browser without console errors; automated audio tests check routing and scheduling, not perceived loudness on physical speakers. Earlier manual observations below describe the original exploration checks.
 
 Autopilot tests advance real steering and flight physics at 60 simulation steps per second. These tests verify logic; they do not constitute a GPU frame-rate benchmark.
 

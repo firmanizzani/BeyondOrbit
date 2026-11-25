@@ -560,6 +560,10 @@ export class UI {
             1,
             0.01,
           )}${range('effects', 'Sound effects', 0, 1, 0.01)}${check('mute', 'Mute audio')}
+          <div class="panel-actions">
+            <button class="secondary" id="preview-music">Test music</button>
+            <button class="secondary" id="preview-effects">Test sound effects</button>
+          </div>
         </section>
         <section class="settings-section">
           <h3>Controls</h3>
@@ -606,6 +610,22 @@ export class UI {
             g.applySettings();
           }),
       );
+    for (const bus of ['music', 'effects']) {
+      $(`#preview-${bus}`).onclick = () => {
+        g.audio.start(s);
+        if (s.mute || s.master === 0 || s[bus] === 0) {
+          this.toast(
+            'Audio is muted or its volume is zero. Adjust the audio settings first.',
+          );
+          return;
+        }
+        if (!g.audio.context) {
+          this.toast('Web Audio is unavailable in this browser.');
+          return;
+        }
+        g.audio.preview(bus);
+      };
+    }
     $('#fullscreen').onclick = () => {
       const promise = document.fullscreenElement
         ? document.exitFullscreen()

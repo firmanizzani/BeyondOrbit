@@ -301,8 +301,9 @@ export class Game {
     this.universe.followBackground(this.camera.position);
     this.audio.update(
       this.ship.velocity.length(),
-      this.controls.has('ShiftLeft'),
+      this.controls.has('ShiftLeft') || this.controls.has('ShiftRight'),
       this.flying,
+      !!this.scanner.planet,
     );
     this.spaceRenderer.render(this.scene, this.camera, this.settings.bloom);
     if (this.flying) {

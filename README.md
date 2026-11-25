@@ -21,7 +21,7 @@ Built from [`build.md`](build.md) and [`prd.md`](prd.md) with HTML, CSS, Vanilla
 - **Cinematic Mode:** hide the HUD, labels, and navigation markers while retaining flight controls.
 - **Complete menus:** New Game, Continue, pause, settings, How to Play, loading screens, and confirmation dialogs.
 - **Working settings:** graphics quality, render distance, bloom, particle quality, orbit lines, labels, fullscreen, audio volumes, mouse sensitivity, default camera, and inverted Y axis.
-- **Procedural audio:** ambient music and engine, boost, warp, scanner, discovery, and interface sounds.
+- **Procedural audio:** audible ambient harmonies, engine and boost sounds, warp sweeps, recurring scanner pulses, discovery chimes, and interface sounds. Settings include separate music and sound-effect preview buttons.
 - **Local saves:** automatic progress and settings storage, save validation, safe recovery from invalid data, and Continue support.
 - **Buildless deployment:** all runtime dependencies are bundled locally and the project can run on static hosting.
 
