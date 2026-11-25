@@ -28,7 +28,7 @@ function fbm(x, y, s) {
   }
   return n;
 }
-export function textureFor(data) {
+export async function textureFor(data) {
   if (imageCache.has(data.id)) {
     const texture = new T.CanvasTexture(imageCache.get(data.id));
     texture.colorSpace = T.SRGBColorSpace;
@@ -45,7 +45,11 @@ export function textureFor(data) {
     base = new T.Color(data.color);
   const seed = [...data.id].reduce((s, c) => s + c.charCodeAt(0), 0);
   const gas = data.texture === 'gas' || data.texture === 'cloud';
-  for (let y = 0; y < height; y++)
+  for (let y = 0; y < height; y++) {
+    // Yield between small row batches so the warp animation can keep rendering.
+    if (y > 0 && y % 12 === 0) {
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+    }
     for (let x = 0; x < width; x++) {
       const u = x / width,
         v = y / height,
@@ -129,6 +133,7 @@ export function textureFor(data) {
       img.data[i + 2] = Math.min(255, Math.pow(Math.max(b, 0), 1 / 2.2) * 255);
       img.data[i + 3] = 255;
     }
+  }
   ctx.putImageData(img, 0, 0);
   imageCache.set(data.id, c);
   if (imageCache.size > 8) imageCache.delete(imageCache.keys().next().value);

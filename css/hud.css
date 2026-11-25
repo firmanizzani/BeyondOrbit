@@ -224,7 +224,7 @@
 }
 .mouse-hint {
   position: absolute;
-  bottom: 110px;
+  bottom: 70px;
   left: 50%;
   transform: translateX(-50%);
   font-size: 0.75rem;
@@ -331,6 +331,12 @@
   z-index: 15;
   background: radial-gradient(ellipse, transparent, #04112699);
   text-shadow: 0 0 25px #42d9f588;
+}
+#warp-curtain {
+  z-index: 14;
+  pointer-events: none;
+  background: #030814;
+  opacity: 0;
 }
 #warp-overlay > span {
   letter-spacing: 0.4em;

@@ -100,6 +100,7 @@ export class Universe {
   async load(system, settings, onProgress = () => {}, preview = false) {
     if (this.group) disposeTree(this.group, new Set([this.cloudTexture]));
     this.group = new T.Group();
+    this.group.visible = !this.hiddenDuringWarp;
     this.scene.add(this.group);
     this.planets = [];
     this.system = system;
@@ -139,7 +140,7 @@ export class Universe {
       (p) => p.system === system.id && (!preview || p.id === 'earth'),
     );
     for (let i = 0; i < data.length; i++) {
-      const p = new Planet(data[i], textureFor(data[i]));
+      const p = new Planet(data[i], await textureFor(data[i]));
       this.group.add(p.group, p.orbit);
       this.planets.push(p);
       onProgress((i + 1) / data.length);
