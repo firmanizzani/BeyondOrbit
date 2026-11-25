@@ -14,7 +14,7 @@ Built from [`build.md`](build.md) and [`prd.md`](prd.md) with HTML, CSS, Vanilla
 - **Living space environments:** rotating and orbiting planets, procedural surface textures, atmospheric glow, rings, moons, nebulae, thousands of stars, and an instanced asteroid belt.
 - **Planet scanner:** a timed survey that records discoveries, prevents duplicates, and cancels when you leave scanning range.
 - **Interactive Galaxy Map:** select local destinations or activate Warp Drive to travel between star systems.
-- **Autopilot:** automatic steering, obstacle avoidance, gradual deceleration, and arrival at a safe scanning distance. Manual input takes over immediately.
+- **Autopilot:** automatic steering, stable obstacle detours, gradual acceleration and braking, animated banking, and arrival at a safe scanning distance. The HUD names the object being avoided. Manual input takes over immediately.
 - **Flight navigation:** target distance, velocity, heading, nearby planet, scanner status, autopilot status, and off-screen target indicators.
 - **Two camera modes:** smooth third-person flight and a first-person cockpit view. Press **C** to switch.
 - **Discovery Journal:** planet previews, survey details, exploration progress, and filters by system and discovery status.

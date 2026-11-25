@@ -158,7 +158,11 @@ export class Universe {
       dummy.scale.set(size, size * 0.7, size * 0.9);
       dummy.updateMatrix();
       this.asteroids.setMatrixAt(i, dummy.matrix);
-      this.asteroidObstacles.push({ position: dummy.position.clone(), radius: size + 4 });
+      this.asteroidObstacles.push({
+        name: 'asteroid',
+        position: dummy.position.clone(),
+        radius: size + 4,
+      });
     }
     this.group.add(this.asteroids);
     this.applySettings(settings);
@@ -176,7 +180,7 @@ export class Universe {
   update(dt) {
     this.planets.forEach((p) => p.update(dt));
     this.obstacles = [
-      { position: new T.Vector3(), radius: 63 },
+      { name: 'star', position: new T.Vector3(), radius: 63 },
       ...this.planets.flatMap((p) => p.obstacles()),
       ...this.asteroidObstacles.slice(0, this.asteroids.count),
     ];

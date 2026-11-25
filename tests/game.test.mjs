@@ -259,6 +259,98 @@ test('autopilot steers around an intervening sphere', () => {
   assert.ok(ship.position.distanceTo(planet.position) - planet.data.radius <= 140);
 });
 
+test('avoidance banks smoothly without forced climbing or abrupt braking', () => {
+  for (const rate of [30, 60, 144]) {
+    const ship = new Spaceship(new T.Scene());
+    ship.position.set(0, 0, 650);
+    ship.velocity.set(0, 0, -FLIGHT.cruiseSpeed);
+    const target = {
+      data: { name: 'Mercury', radius: 12, scanRange: 80 },
+      position: new T.Vector3(),
+    };
+    const obstacles = [
+      { name: 'Mercury', position: target.position, radius: 20 },
+      { name: 'Venus', position: new T.Vector3(0, 0, 300), radius: 32 },
+    ];
+    const game = { ship, target, universe: { obstacles }, ui: { toast() {} } };
+    const pilot = new Autopilot(game);
+    pilot.toggle();
+    let maxBank = 0;
+    let avoidedVenus = false;
+    for (let i = 0; i < rate * 100 && pilot.active; i++) {
+      const velocity = ship.velocity.clone();
+      const rotation = ship.quaternion.clone();
+      pilot.update(1 / rate);
+      if (pilot.active) {
+        assert.ok(
+          ship.velocity.distanceTo(velocity) <= FLIGHT.acceleration / rate + 0.00001,
+        );
+        assert.ok(ship.quaternion.angleTo(rotation) <= 1.6 / rate + 0.00001);
+      }
+      avoidedVenus ||= pilot.detour?.name === 'Venus';
+      ship.update(1 / rate, input(), settings, pilot.active);
+      maxBank = Math.max(maxBank, Math.abs(ship.visual.rotation.z));
+      assert.equal(ship.collide(obstacles), false);
+      assert.ok(
+        Math.abs(ship.position.y) < 0.00001,
+        'Avoidance should not inject upward movement',
+      );
+    }
+    assert.equal(pilot.active, false, `Failed to finish detour at ${rate} Hz`);
+    assert.equal(avoidedVenus, true);
+    assert.ok(maxBank > 0.05 && maxBank <= 0.32);
+    assert.ok(ship.position.distanceTo(target.position) - target.data.radius < 80);
+  }
+});
+
+test('autopilot preserves roll when turning through a vertical heading', () => {
+  const ship = new Spaceship(new T.Scene());
+  const target = {
+    data: { name: 'Above', radius: 20, scanRange: 100 },
+    position: new T.Vector3(0, 600, 0),
+  };
+  const game = { ship, target, universe: { obstacles: [] }, ui: { toast() {} } };
+  const pilot = new Autopilot(game);
+  pilot.toggle();
+  for (let i = 0; i < 6000 && pilot.active; i++) {
+    const before = ship.quaternion.clone();
+    pilot.update(1 / 60);
+    assert.ok(ship.quaternion.angleTo(before) <= 1.6 / 60 + 0.00001);
+    ship.update(1 / 60, input(), settings, pilot.active);
+  }
+  assert.equal(pilot.active, false);
+  assert.ok(ship.position.distanceTo(target.position) < 120);
+});
+
+test('Solar System routes avoid neighbouring planets, moons, and the star', () => {
+  const solar = planets.filter((p) => p.system === 'solar');
+  for (const origin of ['earth', 'venus', 'saturn']) {
+    for (const destination of solar) {
+      if (origin === destination.id) continue;
+      const worlds = solar.map((data) => new Planet(data, null));
+      const source = worlds.find((p) => p.data.id === origin);
+      const target = worlds.find((p) => p.data.id === destination.id);
+      const ship = new Spaceship(new T.Scene());
+      ship.position.copy(source.position).add(new T.Vector3(-38, 14, 104));
+      const game = { ship, target, universe: { obstacles: [] }, ui: { toast() {} } };
+      const pilot = new Autopilot(game);
+      pilot.toggle();
+      const route = `${origin} to ${destination.id}`;
+      for (let i = 0; i < 9000 && pilot.active; i++) {
+        worlds.forEach((p) => p.update(1 / 30));
+        game.universe.obstacles = [
+          { name: 'Sun', position: new T.Vector3(), radius: 63 },
+          ...worlds.flatMap((p) => p.obstacles()),
+        ];
+        pilot.update(1 / 30);
+        ship.update(1 / 30, input(), settings, pilot.active);
+        assert.equal(ship.collide(game.universe.obstacles), false, route);
+      }
+      assert.equal(pilot.active, false, `${route} did not arrive`);
+    }
+  }
+});
+
 test('invalid saves are rejected and valid saves sanitize discovery IDs', () => {
   const valid = {
     version: 1,

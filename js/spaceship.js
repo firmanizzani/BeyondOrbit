@@ -167,7 +167,7 @@ export class Spaceship {
         T.MathUtils.clamp(-yaw * 12, -0.4, 0.4),
         0.1,
       );
-    } else this.bank *= 0.95;
+    }
     this.position.addScaledVector(this.velocity, dt);
     this.visual.rotation.z = this.bank;
     const speed = this.velocity.length();

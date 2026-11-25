@@ -276,10 +276,15 @@ export class Planet {
   }
   obstacles() {
     return [
-      { position: this.position, radius: this.data.radius * 1.09 + 4 },
+      {
+        name: this.data.name,
+        position: this.position,
+        radius: this.data.radius * 1.09 + 4,
+      },
       ...this.moons.map((m) => ({
         position: m.mesh.getWorldPosition(new T.Vector3()),
         radius: m.radius + 4,
+        name: `${this.data.name} moon`,
       })),
     ];
   }

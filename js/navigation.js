@@ -95,7 +95,14 @@ export class Navigation {
           : 'FLIGHT ASSIST ON',
     );
     set('scanner-status', g.scanner.planet ? 'Scanning' : ready ? 'Ready' : 'Standby');
-    set('autopilot-status', g.autopilot.active ? 'Engaged · P' : 'Offline · P');
+    set(
+      'autopilot-status',
+      g.autopilot.active
+        ? g.autopilot.detour
+          ? `Avoiding ${g.autopilot.detour.name} · P`
+          : 'Engaged · P'
+        : 'Offline · P',
+    );
     set(
       'camera-status',
       g.cameraRig.mode === 'first' ? 'Cockpit · C' : 'Third person · C',
