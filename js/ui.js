@@ -774,7 +774,6 @@ export class UI {
         you there. Once the scanner is ready, press F to record your discovery. Visit
         another star system by selecting it in the map and activating Warp Drive.
       </p>
-      ${this.featureOverview()}
       <div class="controls-grid">
         ${controls
           .map(

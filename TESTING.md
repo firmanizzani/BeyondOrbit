@@ -48,7 +48,7 @@ The latest autopilot revision replaces per-frame upward avoidance impulses and a
 
 The revised first-flight screen, **Begin Flight**, and **Fly with Autopilot** were exercised on a separate `localhost` origin to preserve the existing `127.0.0.1` save. Selecting Mars and choosing the direct flight action engaged autopilot with an explicit avoidance status. The staged warp to Alpha Centauri reached the destination and restored the third-person ship, HUD, and controls without console errors.
 
-The final onboarding revision also displays six feature summaries immediately below the three starting actions. **Features & controls** opened the feature overview and complete keyboard guide, and returning from that guide restored flight correctly. The full introduction and both actions were visible at the checked desktop viewport.
+The onboarding displays six feature summaries immediately below the three starting actions. **Features & controls** opens the complete keyboard guide, and returning from that guide restored flight correctly. The full introduction and both actions were visible at the checked desktop viewport. How to Play retains the original compact introduction and control list; the repeated feature overview was removed at the user's request.
 
 The four refined rock variants were inspected in a close-up WebGL preview. They use denser geometry, blended vertex normals, multiple surface depressions, mineral texture, and subtle ambient fill. The final belt uses 160 / 360 / 600 visible rocks on Low / Medium / High. These visual checks do not replace cross-device FPS measurements or subjective audio listening.
 
