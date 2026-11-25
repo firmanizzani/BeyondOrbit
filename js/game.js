@@ -135,7 +135,7 @@ export class Game {
     document.querySelector('#loading').classList.add('hidden');
     this.ui.syncVisibility();
     this.save();
-    if (!saved) this.ui.help();
+    if (!saved) this.ui.onboarding();
     else this.ui.toast('Journey restored · Click space to steer');
   }
   reset() {

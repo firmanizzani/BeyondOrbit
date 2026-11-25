@@ -14,13 +14,15 @@ Built from [`build.md`](build.md) and [`prd.md`](prd.md) with HTML, CSS, Vanilla
 - **Living space environments:** rotating and orbiting planets, procedural surface textures, atmospheric glow, rings, moons, nebulae, thousands of stars, and an instanced asteroid belt.
 - **Varied asteroid fields:** four irregular rock shapes, rough mineral surfaces, varied sizes, and a three-dimensional belt with 160 / 360 / 600 rocks on Low / Medium / High.
 - **Planet scanner:** a timed survey that records discoveries, prevents duplicates, and cancels when you leave scanning range.
-- **Interactive Galaxy Map:** select local destinations or activate Warp Drive to travel between star systems.
+- **Interactive Galaxy Map:** select local destinations, choose **Fly with Autopilot** for direct navigation, or activate Warp Drive to travel between star systems.
 - **Autopilot:** automatic steering, stable obstacle detours, gradual acceleration and braking, animated banking, and arrival at a safe scanning distance. The HUD names the object being avoided. Manual input takes over immediately.
 - **Flight navigation:** target distance, velocity, heading, nearby planet, scanner status, autopilot status, and off-screen target indicators.
 - **Two camera modes:** smooth third-person flight and a first-person cockpit view. Press **C** to switch.
 - **Discovery Journal:** planet previews, survey details, exploration progress, and filters by system and discovery status.
 - **Cinematic Mode:** hide the HUD, labels, and navigation markers while retaining flight controls.
 - **Complete menus:** New Game, Continue, pause, settings, How to Play, loading screens, and confirmation dialogs.
+- **Smooth warp transitions:** staged charging, hyperspace travel, covered system loading, deceleration, and gradual arrival. Reduced-motion preferences disable streaks and FOV changes.
+- **Complete first-flight guidance:** three essential actions introduce steering, travel, and discovery, followed by a visible overview of the other features. **Features & controls** opens the complete guide, also available through How to Play.
 - **Working settings:** graphics quality, render distance, bloom, particle quality, orbit lines, labels, fullscreen, audio volumes, mouse sensitivity, default camera, and inverted Y axis.
 - **Procedural audio:** audible ambient harmonies, engine and boost sounds, warp sweeps, recurring scanner pulses, discovery chimes, and interface sounds. Settings include separate music and sound-effect preview buttons.
 - **Local saves:** automatic progress and settings storage, save validation, safe recovery from invalid data, and Continue support.
@@ -48,11 +50,11 @@ Modern Chrome, Edge, and Firefox are the compatibility targets. See [Testing](TE
 
 ### Your First Journey
 
-1. Select **New Game**, read the tutorial, and choose **Ready to Explore**.
+1. Select **New Game**, read the short introduction, and choose **Begin Flight**.
 2. You start near Earth. Click the space view to capture the mouse and steer.
 3. Hold **W** to accelerate and **Space** to brake.
 4. Press **F** when the scanner is ready. Remain within range for 3.5 seconds to record a discovery.
-5. Open **M**, select a planet, and choose **Set Destination**. Press **P** to let autopilot guide you to scanning range.
+5. Open **M**, select a planet, and choose **Fly with Autopilot**. You can also use **Set Destination** and toggle autopilot separately with **P**.
 6. Select another star system and choose **Activate Warp Drive** to travel there.
 7. Open **J** to review discoveries. Exploration remains available after all 24 worlds are discovered.
 
@@ -168,7 +170,7 @@ See [TESTING.md](TESTING.md) for results and verification limits.
 
 ## Performance
 
-The game uses one animation loop, a 50 ms delta-time cap, HUD updates at 10 Hz, one active system, instanced asteroids, a bounded cache of eight procedural texture canvases, GPU resource disposal, built-in frustum culling, and a capped pixel ratio.
+The game uses one animation loop, a 50 ms delta-time cap, HUD updates at 10 Hz, one active system, instanced asteroids, a bounded cache of eight procedural texture canvases, GPU resource disposal, built-in frustum culling, and a capped pixel ratio. Procedural planet textures yield between small row batches to keep animation responsive while a destination loads.
 
 Pixel ratio is reduced automatically when average frame rate is below 28 FPS over five seconds. Low graphics quality reduces resolution and asteroid count. Particle quality controls star count, nebula visibility, and exhaust separately. Turning off bloom reduces GPU work further.
 

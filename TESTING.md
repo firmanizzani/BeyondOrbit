@@ -6,7 +6,7 @@ Tested on November 25, 2026, against the static application served by `npm start
 
 Run `npm test` with Node.js 22 or newer. The suite uses the actual game modules and bundled Three.js, with small fixtures for browser storage and survey notifications.
 
-All **30 tests passed**:
+All **33 tests passed**:
 
 1. Exactly five systems and 24 unique, fully configured planets.
 2. Translation in all six directions and roll input.
@@ -38,8 +38,19 @@ All **30 tests passed**:
 28. Varied asteroid shapes, size distribution, three-dimensional spread, and clearance around planets in all five systems.
 29. Collision spheres enclosing actual transformed asteroid vertices.
 30. Synchronized visible asteroid counts and collision records at all graphics qualities, plus deterministic field generation.
+31. Warp animation continuing during delayed destination loading, a covered camera relocation, restored FOV and controls, and a single arrival save.
+32. Reduced-motion warp without star streaks or FOV changes, preserving cockpit mode.
+33. Procedural texture generation yielding between 12-row batches so rendering can continue.
 
 The latest autopilot revision replaces per-frame upward avoidance impulses and a fixed 48 km/s slowdown with persistent lateral waypoints, bounded velocity changes, roll-preserving turns, and animated banking. The audio revision increases audible frequency content, adds distinct event sounds, and provides channel preview buttons. Both preview buttons were clicked in the browser without console errors; automated audio tests check routing and scheduling, not perceived loudness on physical speakers. Earlier manual observations below describe the original exploration checks.
+
+### Latest Browser Follow-up
+
+The revised first-flight screen, **Begin Flight**, and **Fly with Autopilot** were exercised on a separate `localhost` origin to preserve the existing `127.0.0.1` save. Selecting Mars and choosing the direct flight action engaged autopilot with an explicit avoidance status. The staged warp to Alpha Centauri reached the destination and restored the third-person ship, HUD, and controls without console errors.
+
+The final onboarding revision also displays six feature summaries immediately below the three starting actions. **Features & controls** opened the feature overview and complete keyboard guide, and returning from that guide restored flight correctly. The full introduction and both actions were visible at the checked desktop viewport.
+
+The four refined rock variants were inspected in a close-up WebGL preview. They use denser geometry, blended vertex normals, multiple surface depressions, mineral texture, and subtle ambient fill. The final belt uses 160 / 360 / 600 visible rocks on Low / Medium / High. These visual checks do not replace cross-device FPS measurements or subjective audio listening.
 
 Autopilot tests advance real steering and flight physics at 60 simulation steps per second. These tests verify logic; they do not constitute a GPU frame-rate benchmark.
 

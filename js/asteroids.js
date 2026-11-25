@@ -13,10 +13,11 @@ function randomSequence(seed) {
 }
 
 function rockGeometry(variant) {
-  const geometry = new T.IcosahedronGeometry(1, 2);
+  const geometry = new T.IcosahedronGeometry(1, 3);
   const positions = geometry.attributes.position;
   const colors = [];
   const impact = new T.Vector3(0.5 + variant * 0.13, 0.8, -0.4).normalize();
+  const secondImpact = new T.Vector3(-0.7, 0.15, 0.4 + variant * 0.1).normalize();
   let radius = 0;
   for (let i = 0; i < positions.count; i++) {
     const point = new T.Vector3().fromBufferAttribute(positions, i);
@@ -24,7 +25,10 @@ function rockGeometry(variant) {
     const broad = Math.sin(normal.x * 4.2 + variant) * Math.cos(normal.y * 3.7 - variant);
     const grain = Math.sin(normal.z * 18 + normal.y * 11 + variant * 4);
     const pit = Math.exp(-Math.pow((1 - normal.dot(impact)) / 0.12, 2));
-    point.multiplyScalar(0.93 + broad * 0.14 + grain * 0.025 - pit * 0.15);
+    const secondPit = Math.exp(-Math.pow((1 - normal.dot(secondImpact)) / 0.07, 2));
+    point.multiplyScalar(
+      0.93 + broad * 0.14 + grain * 0.025 - pit * 0.15 - secondPit * 0.09,
+    );
     point.x *= 0.84 + variant * 0.12;
     point.y *= 1.13 - variant * 0.11;
     positions.setXYZ(i, point.x, point.y, point.z);
@@ -35,6 +39,29 @@ function rockGeometry(variant) {
   positions.needsUpdate = true;
   geometry.setAttribute('color', new T.Float32BufferAttribute(colors, 3));
   geometry.computeVertexNormals();
+  // Share lighting normals across duplicated triangle vertices, retaining a
+  // little faceting without the obvious low-poly crystal appearance.
+  const normals = geometry.attributes.normal;
+  const sharedNormals = new Map();
+  const keys = [];
+  for (let i = 0; i < positions.count; i++) {
+    const key = [positions.getX(i), positions.getY(i), positions.getZ(i)]
+      .map((v) => v.toFixed(5))
+      .join(',');
+    keys.push(key);
+    const normal = new T.Vector3().fromBufferAttribute(normals, i);
+    if (sharedNormals.has(key)) sharedNormals.get(key).add(normal);
+    else sharedNormals.set(key, normal);
+  }
+  for (let i = 0; i < normals.count; i++) {
+    const smooth = sharedNormals.get(keys[i]).clone().normalize();
+    const normal = new T.Vector3()
+      .fromBufferAttribute(normals, i)
+      .lerp(smooth, 0.85)
+      .normalize();
+    normals.setXYZ(i, normal.x, normal.y, normal.z);
+  }
+  normals.needsUpdate = true;
   geometry.boundingSphere = new T.Sphere(new T.Vector3(), radius);
   return geometry;
 }
@@ -83,6 +110,8 @@ export class AsteroidBelt {
       vertexColors: true,
       roughness: 0.98,
       metalness: 0.03,
+      emissive: '#504c45',
+      emissiveIntensity: 0.16,
     });
     this.meshes = Array.from({ length: 4 }, (_, variant) => {
       const mesh = new T.InstancedMesh(

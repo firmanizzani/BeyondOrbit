@@ -478,6 +478,69 @@ select {
   color: var(--muted);
   max-width: 800px;
 }
+.onboarding-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-bottom: 28px;
+}
+.onboarding-steps section {
+  background: #132335;
+  padding: 24px;
+}
+.onboarding-steps h3 {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+.onboarding-steps p {
+  color: #b8c8d9;
+  font-size: 0.9rem;
+  line-height: 1.8;
+}
+.feature-overview {
+  margin: 0 0 24px;
+}
+.feature-overview h3 {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 14px;
+}
+.feature-overview ul {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px 24px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.feature-overview li {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.85rem;
+  line-height: 1.55;
+}
+.feature-overview strong {
+  font-weight: 500;
+}
+.feature-overview span {
+  color: #b8c8d9;
+}
+@media (max-width: 900px) {
+  .feature-overview ul {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 760px) {
+  .onboarding-steps {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .onboarding-steps section {
+    padding: 16px 20px;
+  }
+}
 .help-tip {
   background: #13283a;
   padding: 16px 20px;

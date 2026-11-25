@@ -271,7 +271,10 @@ export class UI {
           </div>
           <div class="panel-actions">
             ${s.id === g.system.id
-              ? '<button id="set-destination" class="primary">Set Destination</button>'
+              ? html`
+                  <button id="set-destination" class="secondary">Set Destination</button>
+                  <button id="fly-destination" class="primary">Fly with Autopilot</button>
+                `
               : '<button id="activate-warp" class="primary">Activate Warp Drive</button>'}
           </div>
           <p style="margin-top:14px;font-size:.75rem">
@@ -303,14 +306,18 @@ export class UI {
             this.drawMap();
           }),
       );
+    const chooseDestination = (fly) => {
+      g.target = g.universe.find(this.selectedPlanet);
+      g.autopilot.cancel();
+      this.close();
+      g.save();
+      if (fly) g.autopilot.toggle();
+      else this.toast(`Destination set · ${g.target.data.name}. Press P for autopilot.`);
+    };
     if ($('#set-destination'))
-      $('#set-destination').onclick = () => {
-        g.target = g.universe.find(this.selectedPlanet);
-        g.autopilot.cancel();
-        this.close();
-        g.save();
-        this.toast(`Destination set · ${g.target.data.name}. Press P for autopilot.`);
-      };
+      $('#set-destination').onclick = () => chooseDestination(false);
+    if ($('#fly-destination'))
+      $('#fly-destination').onclick = () => chooseDestination(true);
     if ($('#activate-warp')) $('#activate-warp').onclick = () => g.warp.start(s);
   }
   preview(data) {
@@ -642,6 +649,98 @@ export class UI {
         },
       );
   }
+  featureOverview() {
+    const features = [
+      ['Flight & boost', 'Strafe, climb, descend, and roll. Shift boosts; Space brakes.'],
+      ['Galaxy & warp', 'Use M to explore five star systems and activate Warp Drive.'],
+      [
+        'Autopilot',
+        'Press P to toggle navigation. Manual input takes control immediately.',
+      ],
+      [
+        'Cockpit & cinematic views',
+        'C switches cameras; the mouse wheel changes chase distance. H hides the HUD.',
+      ],
+      [
+        'Scans & Discovery Journal',
+        'F surveys nearby worlds. J opens discoveries, planet details, and filters.',
+      ],
+      [
+        'Settings & automatic saves',
+        'Esc opens pause and settings. Graphics, audio, and flight progress save on this browser.',
+      ],
+    ];
+    return html`
+      <section class="feature-overview">
+        <h3>More to explore</h3>
+        <ul>
+          ${features
+            .map(
+              ([title, text]) => html`
+                <li>
+                  <strong>${title}</strong>
+                  <span>${text}</span>
+                </li>
+              `,
+            )
+            .join('')}
+        </ul>
+      </section>
+    `;
+  }
+  onboarding() {
+    if (
+      !this.open(
+        'tutorial',
+        'Your first discovery',
+        'The universe is yours to explore. Start with these three actions.',
+      )
+    )
+      return;
+    $('#panel-body').innerHTML = html`
+      <div class="onboarding-steps">
+        <section>
+          <h3>Take the controls</h3>
+          <p>
+            Click space to steer with your mouse. Hold
+            <kbd>W</kbd>
+            to fly forward and
+            <kbd>Space</kbd>
+            to brake.
+          </p>
+        </section>
+        <section>
+          <h3>Choose a world</h3>
+          <p>
+            Open the Galaxy Map with
+            <kbd>M</kbd>
+            , select a planet, and choose
+            <strong>Fly with Autopilot</strong>
+            .
+          </p>
+        </section>
+        <section>
+          <h3>Record your discovery</h3>
+          <p>
+            Press
+            <kbd>F</kbd>
+            when the scanner is ready. Find your discoveries in the journal with
+            <kbd>J</kbd>
+            .
+          </p>
+        </section>
+      </div>
+      ${this.featureOverview()}
+      <p class="help-intro">
+        You're already near Earth, within scanning range. There are no missions, enemies,
+        or time limits.
+      </p>
+      <div class="panel-actions">
+        <button class="primary" data-action="close">Begin Flight</button>
+        <button class="secondary" data-action="help">Features &amp; controls</button>
+      </div>
+    `;
+  }
   help() {
     if (this.kind === 'pause') this.helpBack = 'pause';
     if (
@@ -675,6 +774,7 @@ export class UI {
         you there. Once the scanner is ready, press F to record your discovery. Visit
         another star system by selecting it in the map and activating Warp Drive.
       </p>
+      ${this.featureOverview()}
       <div class="controls-grid">
         ${controls
           .map(
