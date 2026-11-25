@@ -1,4 +1,5 @@
 import * as T from '../vendor/three.module.js';
+import { FLIGHT } from './flight.js';
 export class Autopilot {
   constructor(game) {
     this.game = game;
@@ -59,7 +60,10 @@ export class Autopilot {
       this.cancel('Destination reached · Scanner ready');
       return;
     }
-    const speed = Math.min(blocked ? 48 : 210, Math.max(1, remaining * 0.7));
+    const speed = Math.min(
+      blocked ? 48 : FLIGHT.cruiseSpeed,
+      Math.max(1, remaining * 0.7),
+    );
     const desired = heading.normalize().multiplyScalar(speed);
     ship.velocity.lerp(desired, 1 - Math.exp(-dt * 2));
   }

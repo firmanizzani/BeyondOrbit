@@ -1,4 +1,5 @@
 import * as T from '../vendor/three.module.js';
+import { FLIGHT } from './flight.js';
 export class Spaceship {
   constructor(scene) {
     this.root = new T.Group();
@@ -137,9 +138,14 @@ export class Spaceship {
         );
       if (direction.lengthSq() > 0)
         direction.normalize().applyQuaternion(this.quaternion);
-      this.velocity.addScaledVector(direction, dt * (boost ? 145 : 46));
-      this.velocity.multiplyScalar(Math.exp(-dt * (input.has('Space') ? 7 : 0.42)));
-      this.velocity.clampLength(0, boost ? 260 : 95);
+      this.velocity.addScaledVector(
+        direction,
+        dt * (boost ? FLIGHT.boostAcceleration : FLIGHT.acceleration),
+      );
+      this.velocity.multiplyScalar(
+        Math.exp(-dt * (input.has('Space') ? FLIGHT.brakeDrag : FLIGHT.drag)),
+      );
+      this.velocity.clampLength(0, boost ? FLIGHT.boostSpeed : FLIGHT.cruiseSpeed);
       const { x, y } = input.consumeMouse();
       const yaw = -x * 0.0015 * settings.sensitivity,
         pitch = -y * 0.0015 * settings.sensitivity * (settings.invertY ? -1 : 1);

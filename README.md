@@ -79,6 +79,8 @@ Modern Chrome, Edge, and Firefox are the compatibility targets. See [Testing](TE
 
 Manual thrust or mouse steering cancels autopilot. Held inputs are cleared when opening a panel, losing browser focus, hiding the tab, or releasing pointer lock. Atmospheric landing is not supported.
 
+Manual flight and autopilot share a **210 km/s** cruise limit. Holding W reaches cruise speed in approximately **1.8 seconds**; W + Shift raises the limit to **320 km/s**. Release thrust to coast or hold Space to brake.
+
 ## The Galaxy
 
 | Star system    | Planets                                                       |
@@ -119,6 +121,7 @@ css/
 js/
   main.js           Catalog loading and startup
   game.js           Central game state and single animation loop
+  flight.js         Shared acceleration, speed, and braking configuration
   rendering.js      Bright-pass bloom composite
   universe.js       Active system, background, asteroids, and disposal
   planet.js         Textures, atmospheres, planets, rings, and moons

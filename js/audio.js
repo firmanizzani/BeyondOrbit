@@ -1,3 +1,5 @@
+import { FLIGHT } from './flight.js';
+
 export class AudioSystem {
   constructor() {
     this.context = null;
@@ -55,7 +57,7 @@ export class AudioSystem {
     const t = this.context.currentTime;
     this.engine.frequency.setTargetAtTime(32 + speed * 0.4 + (boost ? 25 : 0), t, 0.15);
     this.engineGain.gain.setTargetAtTime(
-      playing ? 0.015 + Math.min(speed / 260, 1) * 0.05 : 0,
+      playing ? 0.015 + Math.min(speed / FLIGHT.boostSpeed, 1) * 0.05 : 0,
       t,
       0.2,
     );

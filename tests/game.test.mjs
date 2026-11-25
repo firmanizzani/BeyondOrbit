@@ -12,6 +12,7 @@ import { Game } from '../js/game.js';
 import { disposeTree } from '../js/universe.js';
 import { Controls } from '../js/controls.js';
 import { CameraRig } from '../js/camera.js';
+import { FLIGHT } from '../js/flight.js';
 
 const systems = JSON.parse(
   await readFile(new URL('../data/systems.json', import.meta.url)),
@@ -106,10 +107,29 @@ test('boost increases speed and brake dissipates inertia', () => {
     regular.update(1 / 60, input(['KeyW']), settings);
     boosted.update(1 / 60, input(['KeyW', 'ShiftLeft']), settings);
   }
-  assert.ok(boosted.velocity.length() > regular.velocity.length() * 2);
-  assert.ok(boosted.velocity.length() <= 260);
+  assert.ok(boosted.velocity.length() > regular.velocity.length() * 1.4);
+  assert.ok(boosted.velocity.length() <= FLIGHT.boostSpeed);
   for (let i = 0; i < 60; i++) boosted.update(1 / 60, input(['Space']), settings);
   assert.ok(boosted.velocity.length() < 1);
+});
+
+test('manual thrust reaches autopilot cruise speed within two seconds', () => {
+  for (const rate of [30, 60, 144]) {
+    const ship = new Spaceship(new T.Scene());
+    for (let i = 0; i < rate / 2; i++) ship.update(1 / rate, input(['KeyW']), settings);
+    assert.ok(ship.velocity.length() > 70, `Sluggish initial response at ${rate} Hz`);
+    for (let i = rate / 2; i < rate * 2; i++)
+      ship.update(1 / rate, input(['KeyW']), settings);
+    assert.ok(ship.velocity.length() >= FLIGHT.cruiseSpeed - 1);
+    assert.ok(ship.velocity.length() <= FLIGHT.cruiseSpeed);
+  }
+});
+
+test('manual takeover preserves autopilot cruise speed without an abrupt speed cap', () => {
+  const ship = new Spaceship(new T.Scene());
+  ship.velocity.set(0, 0, -FLIGHT.cruiseSpeed);
+  ship.update(1 / 60, input(['KeyW']), settings);
+  assert.ok(ship.velocity.length() >= FLIGHT.cruiseSpeed - 1);
 });
 
 test('sphere collisions preserve tangential flight and reject inward velocity', () => {

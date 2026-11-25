@@ -1,4 +1,5 @@
 import * as T from '../vendor/three.module.js';
+import { FLIGHT } from './flight.js';
 export function surfaceDistance(ship, planet) {
   return Math.max(0, ship.position.distanceTo(planet.position) - planet.data.radius);
 }
@@ -83,7 +84,8 @@ export class Navigation {
       g.target ? Math.round(surfaceDistance(g.ship, g.target)).toLocaleString() : '—',
     );
     set('velocity', Math.round(speed));
-    document.querySelector('#speed-fill').style.width = `${(speed / 260) * 100}%`;
+    document.querySelector('#speed-fill').style.width =
+      `${Math.min(speed / FLIGHT.boostSpeed, 1) * 100}%`;
     set(
       'thrust-status',
       g.controls.has('Space')
