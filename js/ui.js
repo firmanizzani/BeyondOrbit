@@ -69,6 +69,7 @@ export class UI {
     $('#hud').classList.add('hidden');
     $('#labels').classList.add('hidden');
     $('#cockpit').classList.add('hidden');
+    this.game.mobile?.syncVisibility();
     const previewPlanet =
       this.game.universe.find('earth') || this.game.universe.planets[0];
     if (previewPlanet) {
@@ -106,6 +107,7 @@ export class UI {
       'hidden',
       g.cameraRig.mode !== 'first' || g.state === 'menu' || !g.started,
     );
+    g.mobile?.syncVisibility();
   }
   updateLock(locked) {
     $('#mouse-hint').classList.toggle('hidden', locked);
@@ -152,6 +154,7 @@ export class UI {
       <div id="panel-body"></div>
     `;
     $('#panel').focus();
+    g.mobile?.syncVisibility();
     return true;
   }
   hidePanel() {
@@ -650,26 +653,59 @@ export class UI {
       );
   }
   featureOverview() {
-    const features = [
-      ['Flight & boost', 'Strafe, climb, descend, and roll. Shift boosts; Space brakes.'],
-      ['Galaxy & warp', 'Use M to explore five star systems and activate Warp Drive.'],
-      [
-        'Autopilot',
-        'Press P to toggle navigation. Manual input takes control immediately.',
-      ],
-      [
-        'Cockpit & cinematic views',
-        'C switches cameras; the mouse wheel changes chase distance. H hides the HUD.',
-      ],
-      [
-        'Scans & Discovery Journal',
-        'F surveys nearby worlds. J opens discoveries, planet details, and filters.',
-      ],
-      [
-        'Settings & automatic saves',
-        'Esc opens pause and settings. Graphics, audio, and flight progress save on this browser.',
-      ],
-    ];
+    const features = this.game.touchMode
+      ? [
+          [
+            'Flight & boost',
+            'Use the left joystick to thrust and strafe. Boost toggles extra speed; hold Brake to stop.',
+          ],
+          [
+            'Galaxy & warp',
+            'Tap Map to explore five star systems and activate Warp Drive.',
+          ],
+          [
+            'Autopilot',
+            'Tap Auto to toggle navigation. Moving the joystick or steering takes control.',
+          ],
+          [
+            'Cockpit & cinematic views',
+            'View switches cameras. Pinch space to adjust chase distance. Hide HUD enters cinematic mode.',
+          ],
+          [
+            'Scans & Discovery Journal',
+            'Tap Scan planet when ready. Journal opens discoveries, details, and filters.',
+          ],
+          [
+            'Settings & automatic saves',
+            'Pause opens settings. Graphics, audio, and flight progress save on this browser.',
+          ],
+        ]
+      : [
+          [
+            'Flight & boost',
+            'Strafe, climb, descend, and roll. Shift boosts; Space brakes.',
+          ],
+          [
+            'Galaxy & warp',
+            'Use M to explore five star systems and activate Warp Drive.',
+          ],
+          [
+            'Autopilot',
+            'Press P to toggle navigation. Manual input takes control immediately.',
+          ],
+          [
+            'Cockpit & cinematic views',
+            'C switches cameras; the mouse wheel changes chase distance. H hides the HUD.',
+          ],
+          [
+            'Scans & Discovery Journal',
+            'F surveys nearby worlds. J opens discoveries, planet details, and filters.',
+          ],
+          [
+            'Settings & automatic saves',
+            'Esc opens pause and settings. Graphics, audio, and flight progress save on this browser.',
+          ],
+        ];
     return html`
       <section class="feature-overview">
         <h3>More to explore</h3>
@@ -701,33 +737,67 @@ export class UI {
       <div class="onboarding-steps">
         <section>
           <h3>Take the controls</h3>
-          <p>
-            Click space to steer with your mouse. Hold
-            <kbd>W</kbd>
-            to fly forward and
-            <kbd>Space</kbd>
-            to brake.
-          </p>
+          ${this.game.touchMode
+            ? html`
+                <p>
+                  Move the left joystick to fly. Swipe space to steer and hold
+                  <strong>Brake</strong>
+                  to stop.
+                </p>
+              `
+            : html`
+                <p>
+                  Click space to steer with your mouse. Hold
+                  <kbd>W</kbd>
+                  to fly forward and
+                  <kbd>Space</kbd>
+                  to brake.
+                </p>
+              `}
         </section>
         <section>
           <h3>Choose a world</h3>
-          <p>
-            Open the Galaxy Map with
-            <kbd>M</kbd>
-            , select a planet, and choose
-            <strong>Fly with Autopilot</strong>
-            .
-          </p>
+          ${this.game.touchMode
+            ? html`
+                <p>
+                  Tap
+                  <strong>Map</strong>
+                  , select a planet, and choose
+                  <strong>Fly with Autopilot</strong>
+                  .
+                </p>
+              `
+            : html`
+                <p>
+                  Open the Galaxy Map with
+                  <kbd>M</kbd>
+                  , select a planet, and choose
+                  <strong>Fly with Autopilot</strong>
+                  .
+                </p>
+              `}
         </section>
         <section>
           <h3>Record your discovery</h3>
-          <p>
-            Press
-            <kbd>F</kbd>
-            when the scanner is ready. Find your discoveries in the journal with
-            <kbd>J</kbd>
-            .
-          </p>
+          ${this.game.touchMode
+            ? html`
+                <p>
+                  Tap
+                  <strong>Scan planet</strong>
+                  when ready. Review your discoveries through
+                  <strong>Journal</strong>
+                  .
+                </p>
+              `
+            : html`
+                <p>
+                  Press
+                  <kbd>F</kbd>
+                  when the scanner is ready. Find your discoveries in the journal with
+                  <kbd>J</kbd>
+                  .
+                </p>
+              `}
         </section>
       </div>
       ${this.featureOverview()}
@@ -751,28 +821,47 @@ export class UI {
       )
     )
       return;
-    const controls = [
-      ['W / S', 'Forward / reverse'],
-      ['A / D', 'Strafe left / right'],
-      ['R / Ctrl', 'Up / down'],
-      ['Mouse', 'Pitch and yaw'],
-      ['Q / E', 'Roll left / right'],
-      ['Shift', 'Speed boost'],
-      ['Space', 'Brake'],
-      ['F', 'Scan nearby planet'],
-      ['M', 'Galaxy Map'],
-      ['P', 'Toggle autopilot'],
-      ['C', 'Switch camera'],
-      ['J', 'Discovery Journal'],
-      ['H', 'Cinematic mode'],
-      ['Esc', 'Pause / close panel'],
-      ['Mouse wheel', 'Third-person camera distance'],
-    ];
+    const controls = this.game.touchMode
+      ? [
+          ['Left joystick', 'Forward, reverse, and strafe'],
+          ['Swipe space', 'Pitch and yaw'],
+          ['Up / Down', 'Vertical movement'],
+          ['Roll L / Roll R', 'Roll left / right'],
+          ['Boost', 'Toggle speed boost'],
+          ['Brake (hold)', 'Brake'],
+          ['Scan planet', 'Scan nearby planet'],
+          ['Map', 'Galaxy Map and Warp Drive'],
+          ['Auto', 'Toggle autopilot'],
+          ['View', 'Switch camera'],
+          ['Journal', 'Discovery Journal'],
+          ['Hide HUD / Show HUD', 'Cinematic mode'],
+          ['Pause', 'Pause menu'],
+          ['Pinch space', 'Third-person camera distance'],
+        ]
+      : [
+          ['W / S', 'Forward / reverse'],
+          ['A / D', 'Strafe left / right'],
+          ['R / Ctrl', 'Up / down'],
+          ['Mouse', 'Pitch and yaw'],
+          ['Q / E', 'Roll left / right'],
+          ['Shift', 'Speed boost'],
+          ['Space', 'Brake'],
+          ['F', 'Scan nearby planet'],
+          ['M', 'Galaxy Map'],
+          ['P', 'Toggle autopilot'],
+          ['C', 'Switch camera'],
+          ['J', 'Discovery Journal'],
+          ['H', 'Cinematic mode'],
+          ['Esc', 'Pause / close panel'],
+          ['Mouse wheel', 'Third-person camera distance'],
+        ];
     $('#panel-body').innerHTML = html`
       <p class="help-intro">
-        Fly freely, select a planet in the Galaxy Map, and press P to let autopilot guide
+        ${this.game.touchMode
+          ? 'Fly freely using the joystick and swipe steering. Tap Map, select a planet, and choose Fly with Autopilot. Tap Scan planet within range, then review your discoveries in Journal. Landscape orientation provides more space for flight.'
+          : `Fly freely, select a planet in the Galaxy Map, and press P to let autopilot guide
         you there. Once the scanner is ready, press F to record your discovery. Visit
-        another star system by selecting it in the map and activating Warp Drive.
+        another star system by selecting it in the map and activating Warp Drive.`}
       </p>
       <div class="controls-grid">
         ${controls
@@ -787,10 +876,12 @@ export class UI {
           .join('')}
       </div>
       <div class="help-tip">
-        Click the space view to capture the mouse and steer. Escape releases the mouse and
+        ${this.game.touchMode
+          ? 'Use the left thumb on the joystick and swipe open space with the right thumb. Boost is a toggle; Brake, Up, Down, and Roll act while held. Touch input stops when released or when a menu opens. In cinematic mode, flight controls remain available and Show HUD restores the instruments. Atmospheric landing is not available.'
+          : `Click the space view to capture the mouse and steer. Escape releases the mouse and
         pauses flight. Manual thrust or mouse steering takes over from autopilot. Explore
         from orbit; atmospheric landing is not available. There are no enemies, fuel
-        limits, or time limits.
+        limits, or time limits.`}
       </div>
       <div class="panel-actions">
         <button class="primary" data-action="close">

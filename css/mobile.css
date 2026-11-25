@@ -1,0 +1,265 @@
+#touch-steering,
+#mobile-controls {
+  display: none;
+}
+body.touch-device #touch-steering {
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  touch-action: none;
+}
+body.touch-device #mobile-controls {
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: 7;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.touch-toolbar {
+  position: absolute;
+  top: max(8px, env(safe-area-inset-top));
+  left: max(10px, env(safe-area-inset-left));
+  right: max(10px, env(safe-area-inset-right));
+  display: flex;
+  justify-content: space-between;
+  gap: 4px;
+}
+.touch-toolbar button,
+.touch-buttons button {
+  pointer-events: auto;
+  touch-action: none;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 8px;
+  background: #0c1c2be6;
+  border: 1px solid #55758a88;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  color: #e7edf5;
+}
+.touch-buttons button.held,
+.touch-buttons button[aria-pressed='true'] {
+  background: #2d6c7a;
+  border-color: #75e2f4;
+}
+.touch-stick-wrap {
+  position: absolute;
+  bottom: max(14px, env(safe-area-inset-bottom));
+  left: max(14px, env(safe-area-inset-left));
+  text-align: center;
+}
+.touch-stick-wrap > span {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 0.75rem;
+  color: #b6cfdf;
+}
+#touch-stick {
+  width: 132px;
+  height: 132px;
+  border: 1px solid #739db380;
+  border-radius: 50%;
+  background: #0b1a2a99;
+  display: grid;
+  place-items: center;
+  pointer-events: auto;
+  touch-action: none;
+}
+#touch-knob {
+  width: 48px;
+  height: 48px;
+  background: #70d3e8c9;
+  border: 1px solid #c9f4ff;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.touch-buttons {
+  position: absolute;
+  bottom: max(14px, env(safe-area-inset-bottom));
+  right: max(14px, env(safe-area-inset-right));
+  display: grid;
+  grid-template-columns: repeat(2, 64px);
+  gap: 6px;
+}
+.touch-steer-hint {
+  position: absolute;
+  bottom: max(170px, calc(env(safe-area-inset-bottom) + 154px));
+  width: 100%;
+  text-align: center;
+  color: #c0d9e7;
+  font-size: 0.75rem;
+  pointer-events: none;
+}
+body.touch-device .hud-brand,
+body.touch-device .heading,
+body.touch-device .flight-shortcuts,
+body.touch-device .mouse-hint,
+body.touch-device .hud-bottom-left > p,
+body.touch-device #hud kbd,
+body.touch-device .hud-top-right .quiet,
+body.touch-device .hud-bottom-right > div:last-child {
+  display: none;
+}
+body.touch-device .hud-top-left {
+  left: max(14px, env(safe-area-inset-left));
+  top: calc(max(8px, env(safe-area-inset-top)) + 58px);
+  max-width: 46%;
+}
+body.touch-device .hud-top-right {
+  right: max(14px, env(safe-area-inset-right));
+  top: calc(max(8px, env(safe-area-inset-top)) + 58px);
+  max-width: 46%;
+}
+body.touch-device .hud-top-left h2,
+body.touch-device .hud-top-right h2 {
+  font-size: 1rem;
+}
+body.touch-device .hud-bottom-left {
+  left: max(14px, env(safe-area-inset-left));
+  top: calc(max(8px, env(safe-area-inset-top)) + 140px);
+  bottom: auto;
+  width: 100px;
+}
+body.touch-device .hud-bottom-right {
+  right: max(14px, env(safe-area-inset-right));
+  top: calc(max(8px, env(safe-area-inset-top)) + 140px);
+  bottom: auto;
+  width: 165px;
+}
+body.touch-device .hud-bottom-right button {
+  min-height: 44px;
+}
+body.touch-device .velocity > span:first-child {
+  font-size: 1.9rem;
+}
+body.touch-device .scan-context {
+  top: 43%;
+}
+body.touch-device #scan-button {
+  min-height: 44px;
+}
+body.touch-device #toast {
+  top: calc(max(8px, env(safe-area-inset-top)) + 220px);
+}
+body.touch-device #panel {
+  padding: 22px;
+  max-height: calc(
+    100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 24px
+  );
+  overscroll-behavior: contain;
+}
+body.touch-device #panel button,
+body.touch-device #panel select {
+  min-height: 44px;
+}
+body.touch-device .setting input[type='range'] {
+  height: 44px;
+}
+body.touch-device .close-panel kbd {
+  display: none;
+}
+body.touch-device .control-row kbd {
+  white-space: normal;
+  height: auto;
+  min-height: 28px;
+  text-align: center;
+  padding: 4px 8px;
+}
+body.touch-device #menu {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+body.touch-device .menu-copy {
+  position: relative;
+  left: auto;
+  top: auto;
+  transform: none;
+  margin: 100px 7% 34px;
+}
+body.touch-device .menu-copy h1 {
+  font-size: clamp(56px, 10vw, 90px);
+}
+body.touch-device .menu-footer {
+  position: relative;
+  bottom: auto;
+  left: auto;
+  right: auto;
+  padding: 18px 7% max(18px, env(safe-area-inset-bottom));
+}
+body.touch-device .menu-location {
+  display: none;
+}
+body.touch-device #cockpit > span {
+  display: none;
+}
+body.touch-cinematic .touch-flight {
+  opacity: 0.35;
+}
+body.touch-cinematic .touch-steer-hint,
+body.touch-cinematic
+  .touch-toolbar
+  button:not(#touch-cinematic):not([data-action='pause']) {
+  display: none;
+}
+@media (max-height: 500px) {
+  body.touch-device .menu-copy {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 28px;
+    margin-top: 78px;
+  }
+  body.touch-device .menu-copy h1 {
+    font-size: 56px;
+    grid-column: 1;
+  }
+  body.touch-device .menu-kicker,
+  body.touch-device .tagline {
+    grid-column: 1;
+  }
+  body.touch-device .menu-nav {
+    grid-column: 2;
+    grid-row: 1 / span 3;
+    margin: 0;
+    width: 100%;
+    max-width: 255px;
+  }
+  body.touch-device .touch-toolbar {
+    left: 22%;
+    right: 22%;
+  }
+  body.touch-device .hud-top-left,
+  body.touch-device .hud-top-right {
+    top: max(12px, env(safe-area-inset-top));
+    max-width: 21%;
+  }
+  body.touch-device .hud-top-left > p,
+  body.touch-device .hud-top-left > small,
+  body.touch-device .hud-top-right > small {
+    display: none;
+  }
+  body.touch-device .hud-bottom-left {
+    top: 78px;
+  }
+  body.touch-device .hud-bottom-right {
+    top: 78px;
+  }
+  body.touch-device .scan-context {
+    top: 34%;
+  }
+  body.touch-device #touch-stick {
+    width: 116px;
+    height: 116px;
+  }
+  body.touch-device .touch-buttons {
+    grid-template-columns: repeat(3, 54px);
+  }
+  body.touch-device .touch-steer-hint {
+    bottom: 20px;
+  }
+  body.touch-device #toast {
+    top: 135px;
+  }
+}

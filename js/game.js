@@ -11,6 +11,7 @@ import { WarpDrive } from './warp.js';
 import { AudioSystem } from './audio.js';
 import { UI } from './ui.js';
 import { SpaceRenderer } from './rendering.js';
+import { MobileControls, isMobileDevice } from './mobile.js';
 export class Game {
   constructor(systems, planetData) {
     this.systems = systems;
@@ -19,8 +20,14 @@ export class Game {
     this.state = 'loading';
     this.started = false;
     this.cinematic = false;
+    const query = new URLSearchParams(location.search);
+    this.touchMode = isMobileDevice() || (query.has('test') && query.has('touch'));
+    document.body.classList.toggle('touch-device', this.touchMode);
     this.storage = new Storage(systems, planetData);
     this.settings = { ...this.storage.settings };
+    if (this.touchMode && !this.storage.hasSettings) {
+      Object.assign(this.settings, { quality: 'low', particles: 'medium', bloom: false });
+    }
     this.discovered = new Set(this.storage.saved?.discovered || []);
     this.playtime = this.storage.saved?.playtime || 0;
     this.autosave = 0;
@@ -30,11 +37,11 @@ export class Game {
     this.adaptiveScale = 1;
     this.renderer = new T.WebGLRenderer({
       canvas: this.canvas,
-      antialias: true,
+      antialias: !this.touchMode,
       powerPreference: 'high-performance',
     });
     this.renderer.setSize(innerWidth, innerHeight);
-    this.renderer.setPixelRatio(Math.min(devicePixelRatio, 1.7));
+    this.resizePixelRatio();
     this.renderer.toneMapping = T.ACESFilmicToneMapping;
     this.renderer.toneMappingExposure = 1.12;
     this.renderer.outputColorSpace = T.SRGBColorSpace;
@@ -51,6 +58,7 @@ export class Game {
     this.navigation = new Navigation(this);
     this.warp = new WarpDrive(this);
     this.ui = new UI(this);
+    if (this.touchMode) this.mobile = new MobileControls(this);
     this.clock = new T.Clock();
     window.addEventListener('resize', () => {
       this.renderer.setSize(innerWidth, innerHeight);
@@ -136,7 +144,12 @@ export class Game {
     this.ui.syncVisibility();
     this.save();
     if (!saved) this.ui.onboarding();
-    else this.ui.toast('Journey restored · Click space to steer');
+    else
+      this.ui.toast(
+        this.touchMode
+          ? 'Journey restored · Swipe space to steer'
+          : 'Journey restored · Click space to steer',
+      );
   }
   reset() {
     this.storage.reset();
@@ -161,13 +174,17 @@ export class Game {
       );
     }
   }
-  applySettings() {
+  resizePixelRatio() {
     this.renderer.setPixelRatio(
       Math.min(
         devicePixelRatio,
         { low: 0.8, medium: 1.2, high: 1.7 }[this.settings.quality],
+        this.touchMode ? 1.25 : 2,
       ) * this.adaptiveScale,
     );
+  }
+  applySettings() {
+    this.resizePixelRatio();
     this.camera.far = this.settings.renderDistance;
     this.camera.updateProjectionMatrix();
     this.universe.applySettings(this.settings);
@@ -313,12 +330,7 @@ export class Game {
         const fps = this.performanceFrames / this.performanceTime;
         if (fps < 28 && this.adaptiveScale > 0.65) {
           this.adaptiveScale = Math.max(0.65, this.adaptiveScale - 0.15);
-          this.renderer.setPixelRatio(
-            Math.min(
-              devicePixelRatio,
-              { low: 0.8, medium: 1.2, high: 1.7 }[this.settings.quality],
-            ) * this.adaptiveScale,
-          );
+          this.resizePixelRatio();
         }
         this.fps = Math.round(fps);
         this.performanceTime = 0;

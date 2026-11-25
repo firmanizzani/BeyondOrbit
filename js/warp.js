@@ -47,6 +47,7 @@ export class WarpDrive {
     g.scanner.cancel();
     g.autopilot.cancel();
     g.state = 'warping';
+    g.mobile?.syncVisibility();
     g.controls.unlock();
     g.ship.velocity.set(0, 0, 0);
     this.destination = system;

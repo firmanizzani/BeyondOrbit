@@ -2,7 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    />
     <meta name="theme-color" content="#050811" />
     <meta
       name="description"
@@ -16,6 +19,7 @@
     <link rel="stylesheet" href="css/main.css" />
     <link rel="stylesheet" href="css/menu.css" />
     <link rel="stylesheet" href="css/hud.css" />
+    <link rel="stylesheet" href="css/mobile.css" />
   </head>
   <body>
     <canvas id="universe" aria-label="Beyond Orbit 3D spaceflight environment"></canvas>
@@ -178,6 +182,44 @@
       <button id="mouse-hint" class="mouse-hint" data-action="lock">
         Click space to steer · W to accelerate
       </button>
+    </section>
+    <div
+      id="touch-steering"
+      class="hidden"
+      aria-label="Swipe space to steer; pinch with two fingers to change camera distance"
+    ></div>
+    <section id="mobile-controls" class="hidden" aria-label="Touch flight controls">
+      <nav class="touch-toolbar" aria-label="Mobile actions">
+        <button data-action="map">Map</button>
+        <button data-action="journal">Journal</button>
+        <button data-action="autopilot">Auto</button>
+        <button data-action="camera">View</button>
+        <button data-action="cinematic" id="touch-cinematic" aria-pressed="false">
+          Hide HUD
+        </button>
+        <button data-action="pause">Pause</button>
+      </nav>
+      <div class="touch-flight">
+        <div class="touch-stick-wrap">
+          <span>Thrust / strafe</span>
+          <div
+            id="touch-stick"
+            role="group"
+            aria-label="Flight joystick: slide up to fly forward, down to reverse, left or right to strafe"
+          >
+            <i id="touch-knob" aria-hidden="true"></i>
+          </div>
+        </div>
+        <div class="touch-buttons" aria-label="Flight adjustments">
+          <button data-touch-key="KeyR" aria-label="Move up">Up</button>
+          <button data-touch-key="ControlLeft" aria-label="Move down">Down</button>
+          <button data-touch-key="KeyQ" aria-label="Roll left">Roll L</button>
+          <button data-touch-key="KeyE" aria-label="Roll right">Roll R</button>
+          <button id="touch-boost" aria-pressed="false">Boost</button>
+          <button data-touch-key="Space">Brake</button>
+        </div>
+      </div>
+      <p class="touch-steer-hint">Swipe space to steer</p>
     </section>
     <div id="labels" aria-hidden="true"></div>
     <div id="cockpit" class="hidden" aria-hidden="true">

@@ -137,11 +137,13 @@ export class Spaceship {
         .multiply(new T.Quaternion().setFromEuler(new T.Euler(pitch, yaw, roll, 'YXZ')))
         .normalize();
       const boost = input.has('ShiftLeft') || input.has('ShiftRight'),
+        axis = (positive, negative) =>
+          input.axis?.(positive, negative) ??
+          Number(input.has(positive)) - Number(input.has(negative)),
         direction = new T.Vector3(
-          Number(input.has('KeyD')) - Number(input.has('KeyA')),
-          Number(input.has('KeyR')) -
-            Number(input.has('ControlLeft') || input.has('ControlRight')),
-          Number(input.has('KeyS')) - Number(input.has('KeyW')),
+          axis('KeyD', 'KeyA'),
+          axis('KeyR', 'ControlLeft') - Number(input.has('ControlRight')),
+          axis('KeyS', 'KeyW'),
         );
       // Flight assist removes sideways drift in the ship's current frame while
       // preserving deliberate strafe input and forward acceleration.
@@ -149,11 +151,11 @@ export class Spaceship {
         .clone()
         .applyQuaternion(this.quaternion.clone().invert());
       const lateralDamping = Math.exp(-FLIGHT.lateralDrag * dt);
-      if (direction.x === 0) localVelocity.x *= lateralDamping;
-      if (direction.y === 0) localVelocity.y *= lateralDamping;
+      if (Math.abs(direction.x) < 0.08) localVelocity.x *= lateralDamping;
+      if (Math.abs(direction.y) < 0.08) localVelocity.y *= lateralDamping;
       this.velocity.copy(localVelocity.applyQuaternion(this.quaternion));
-      if (direction.lengthSq() > 0)
-        direction.normalize().applyQuaternion(this.quaternion);
+      if (direction.lengthSq() > 1) direction.normalize();
+      direction.applyQuaternion(this.quaternion);
       this.velocity.addScaledVector(
         direction,
         dt * (boost ? FLIGHT.boostAcceleration : FLIGHT.acceleration),

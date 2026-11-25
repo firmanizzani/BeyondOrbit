@@ -99,9 +99,9 @@ export class Navigation {
       'autopilot-status',
       g.autopilot.active
         ? g.autopilot.detour
-          ? `Avoiding ${g.autopilot.detour.name} · P`
-          : 'Engaged · P'
-        : 'Offline · P',
+          ? `Avoiding ${g.autopilot.detour.name}${g.touchMode ? '' : ' · P'}`
+          : `Engaged${g.touchMode ? '' : ' · P'}`
+        : `Offline${g.touchMode ? '' : ' · P'}`,
     );
     set(
       'camera-status',

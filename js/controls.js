@@ -2,6 +2,8 @@ export class Controls {
   constructor(game) {
     this.game = game;
     this.keys = new Set();
+    this.touchKeys = new Set();
+    this.touchAxes = { x: 0, z: 0 };
     this.mouse = { x: 0, y: 0 };
     this.locked = false;
     document.addEventListener('keydown', (e) => {
@@ -61,7 +63,7 @@ export class Controls {
       }
     });
     game.canvas.addEventListener('click', () => {
-      if (game.flying) this.lock();
+      if (game.flying && !game.touchMode) this.lock();
     });
     window.addEventListener('blur', () => {
       this.clear();
@@ -75,7 +77,13 @@ export class Controls {
     });
   }
   has(key) {
-    return this.keys.has(key);
+    return this.keys.has(key) || this.touchKeys.has(key);
+  }
+  axis(positive, negative) {
+    let value = Number(this.has(positive)) - Number(this.has(negative));
+    if (positive === 'KeyD' && negative === 'KeyA') value += this.touchAxes.x;
+    if (positive === 'KeyS' && negative === 'KeyW') value += this.touchAxes.z;
+    return Math.max(-1, Math.min(1, value));
   }
   consumeMouse() {
     const m = { ...this.mouse };
@@ -85,9 +93,13 @@ export class Controls {
   }
   clear() {
     this.keys.clear();
+    this.touchKeys.clear();
+    this.touchAxes.x = this.touchAxes.z = 0;
     this.mouse.x = this.mouse.y = 0;
+    this.onClear?.();
   }
   lock() {
+    if (this.game.touchMode) return;
     try {
       const result = this.game.canvas.requestPointerLock();
       result?.catch?.(() =>
