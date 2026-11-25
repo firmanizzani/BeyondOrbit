@@ -221,6 +221,65 @@
   grid-template-columns: 1.2fr 1fr;
   gap: 32px;
 }
+#panel.map-panel {
+  max-width: 100%;
+  height: min(760px, 90dvh);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.map-panel .panel-head {
+  flex: none;
+}
+.map-panel #panel-body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  scrollbar-gutter: stable;
+}
+.map-panel .map-layout {
+  height: 100%;
+  min-height: 440px;
+}
+.map-panel .system-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+.map-panel .system-info > h3,
+.map-panel .system-info > p,
+.map-panel .discovery-count,
+.map-panel progress,
+.map-panel .panel-actions {
+  flex: none;
+}
+.map-panel .system-info > p:first-of-type {
+  min-height: 4.95em;
+}
+.map-panel .planet-list {
+  flex: 1;
+  min-height: 80px;
+  max-height: none;
+  align-content: start;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  padding: 4px;
+  margin-left: -4px;
+}
+.map-panel .panel-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  min-height: 64px;
+  align-items: stretch;
+}
+.map-panel #activate-warp {
+  grid-column: 1 / -1;
+  justify-self: start;
+}
+.map-panel .system-info > p:last-child {
+  min-height: 2.5em;
+}
 .galaxy-chart {
   position: relative;
   min-height: 370px;
@@ -628,6 +687,15 @@ select {
   }
   .map-layout {
     grid-template-columns: 1fr;
+  }
+  .map-panel .map-layout {
+    height: auto;
+  }
+  .map-panel .galaxy-chart {
+    height: 270px;
+  }
+  .map-panel .system-info {
+    height: 530px;
   }
   .galaxy-chart {
     min-height: 270px;

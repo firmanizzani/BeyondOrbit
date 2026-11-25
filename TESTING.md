@@ -52,6 +52,8 @@ The latest autopilot revision replaces per-frame upward avoidance impulses and a
 
 ### Latest Browser Follow-up
 
+Galaxy Map now uses a viewport-bounded panel with a stable chart and action area. At 1440 × 900, all five systems retained the same 1100 × 760 panel, chart dimensions, and action position. Selecting Neptune scrolled its list into view and retained keyboard focus after selection. At 390 × 844, Cryon and Vulcan retained equal panel and content heights, with a stacked chart and reachable Warp action. A short 844 × 390 viewport retained internal scrolling without horizontal document overflow. No console errors were observed during these checks.
+
 The mobile implementation was checked against the generated `dist/` deployment at 390 × 844 and 844 × 390. The mobile introduction uses touch instructions. Dragging the joystick increased velocity and changed the distance to Earth; Brake returned velocity to zero, and a swipe changed heading. Hide HUD exposed Show HUD while preserving flight controls. Pause hid the touch controls and Resume restored them. The landscape view kept the joystick, action buttons, scanner, and navigation toolbar within the viewport. No console errors were observed. Normal desktop mode did not display the touch overlay. These checks used a desktop browser with the explicit test-only touch mode; physical Android and iOS devices were not tested.
 
 `npm run build` completed successfully and validated 38 local asset references plus the five-system, 24-planet catalog. The generated output loaded successfully through the production preview server. Vercel is configured to build with `npm run build` and publish `dist/`; no production deployment was performed.

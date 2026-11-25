@@ -129,6 +129,7 @@ export class UI {
             ? 'journal'
             : 'paused';
     this.kind = kind;
+    $('#panel').classList.toggle('map-panel', kind === 'map');
     this.panelOpen = true;
     $('#menu').inert = true;
     $('#hud').inert = true;
@@ -204,11 +205,21 @@ export class UI {
     this.drawMap();
   }
   drawMap() {
+    const focused = document.activeElement;
+    const focusAttribute = focused?.hasAttribute('data-system')
+      ? 'data-system'
+      : focused?.hasAttribute('data-planet')
+        ? 'data-planet'
+        : null;
+    const focusValue = focusAttribute ? focused.getAttribute(focusAttribute) : null;
+    const scrollTop = $('#panel-body')?.scrollTop || 0;
+    const listScroll = $('#panel .planet-list')?.scrollTop || 0;
     const g = this.game,
       s = g.systems.find((x) => x.id === this.selectedSystem),
       ps = g.planetData.filter((p) => p.system === s.id),
       progress = discoveryProgress(ps, g.discovered);
     if (
+      this.kind !== 'map' &&
       !this.open(
         'map',
         'Galaxy Map',
@@ -254,7 +265,12 @@ export class UI {
             <span>${progress.percent}%</span>
           </div>
           <progress max="100" value="${progress.percent}"></progress>
-          <div class="planet-list">
+          <div
+            class="planet-list"
+            role="region"
+            aria-label="Planets in ${esc(s.name)}"
+            tabindex="0"
+          >
             ${ps
               .map(
                 (p) => html`
@@ -322,6 +338,13 @@ export class UI {
     if ($('#fly-destination'))
       $('#fly-destination').onclick = () => chooseDestination(true);
     if ($('#activate-warp')) $('#activate-warp').onclick = () => g.warp.start(s);
+    $('#panel-body').scrollTop = scrollTop;
+    if (focusAttribute === 'data-planet') $('.planet-list').scrollTop = listScroll;
+    if (focusAttribute) {
+      [...$('#panel').querySelectorAll(`[${focusAttribute}]`)]
+        .find((element) => element.getAttribute(focusAttribute) === focusValue)
+        ?.focus({ preventScroll: true });
+    }
   }
   preview(data) {
     let image = this.previews.get(data.id);
