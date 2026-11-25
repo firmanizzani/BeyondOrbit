@@ -77,9 +77,14 @@ export class Game {
   async loadSystem(system, menu = false) {
     this.system = system;
     document.querySelector('#loading-destination').textContent = system.name;
-    await this.universe.load(system, this.settings, (p) => {
-      document.querySelector('#loading-progress').value = p;
-    });
+    await this.universe.load(
+      system,
+      this.settings,
+      (p) => {
+        document.querySelector('#loading-progress').value = p;
+      },
+      menu,
+    );
     this.target = this.universe.find(
       system.id === 'solar' ? 'earth' : this.universe.planets[0].data.id,
     );
@@ -325,8 +330,15 @@ export class Game {
     document.querySelector('#loading').classList.add('hidden');
     const el = document.createElement('div');
     el.className = 'fatal';
-    el.innerHTML =
-      '<h2>Unable to initialize the universe</h2><p>Beyond Orbit needs a browser with WebGL 2 and hardware acceleration. Run this folder through a local static server, then reload. Check the browser console for details.</p><button onclick="location.reload()">Try again</button>';
+    el.innerHTML = `
+      <h2>Unable to initialize the universe</h2>
+      <p>
+        Beyond Orbit needs a browser with WebGL 2 and hardware acceleration.
+        Run this folder through a local static server, then reload.
+        Check the browser console for details.
+      </p>
+      <button onclick="location.reload()">Try again</button>
+    `;
     document.body.append(el);
   }
 }

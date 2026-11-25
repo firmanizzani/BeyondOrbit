@@ -73,7 +73,7 @@ export class Storage {
     this.settings = validateSettings(this.read(SETTINGS_KEY));
     const raw = this.read(SAVE_KEY);
     this.saved = validateSave(raw, systems, planets);
-    this.corrupt = !!raw && !this.saved;
+    this.corrupt = this.corrupt || (!!raw && !this.saved);
   }
   read(key) {
     try {

@@ -31,7 +31,7 @@
 }
 .edition {
   color: #b2c1d0;
-  font-size: 0.78rem;
+  font-size: 0.875rem;
 }
 .menu-copy {
   position: absolute;
@@ -41,8 +41,8 @@
   animation: menu-reveal 0.9s both;
 }
 .menu-kicker {
-  font-size: 0.68rem;
-  letter-spacing: 0.3em;
+  font-size: 0.875rem;
+  letter-spacing: 0.03em;
   color: #aac6d7;
   margin-bottom: 26px;
 }
@@ -91,7 +91,7 @@
   stroke-width: 1.5;
 }
 .menu-nav button > span:not(:first-child) {
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   color: #7d91a8;
   margin-left: 12px;
 }
@@ -115,8 +115,8 @@
   gap: 9px;
 }
 .menu-location .micro {
-  letter-spacing: 0.16em;
-  font-size: 0.62rem;
+  letter-spacing: 0.02em;
+  font-size: 0.875rem;
   color: #b0c7d4;
 }
 .menu-location strong {
@@ -126,7 +126,7 @@
 }
 .menu-location div > span:last-child {
   color: #aabacb;
-  font-size: 0.75rem;
+  font-size: 0.875rem;
 }
 .menu-footer {
   position: absolute;
@@ -135,8 +135,8 @@
   bottom: 28px;
   display: flex;
   justify-content: space-between;
-  font-size: 0.62rem;
-  letter-spacing: 0.12em;
+  font-size: 0.875rem;
+  letter-spacing: 0.01em;
   color: #8c9db3;
 }
 .menu-footer i {
@@ -268,7 +268,7 @@
 .system-node small {
   display: block;
   margin-top: 5px;
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   color: var(--cyan);
 }
 .system-info h3 {
@@ -309,7 +309,7 @@
   color: var(--cyan);
 }
 .planet-row small {
-  font-size: 0.7rem;
+  font-size: 0.75rem;
 }
 .planet-dot {
   display: inline-block;
@@ -360,7 +360,7 @@ select {
   margin: 14px 0 6px;
 }
 .planet-card small {
-  font-size: 0.7rem;
+  font-size: 0.75rem;
 }
 .planet-preview {
   width: 64px;
@@ -553,6 +553,10 @@ select {
   .menu-footer > span:nth-child(2) {
     display: none;
   }
+  .menu-footer {
+    left: 20px;
+    right: 20px;
+  }
   #panel {
     padding: 24px;
   }
@@ -602,10 +606,10 @@ select {
     top: 48%;
   }
   .wordmark {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
   }
   .menu-kicker {
-    font-size: 0.55rem;
+    font-size: 0.75rem;
   }
   .menu-top {
     left: 7%;

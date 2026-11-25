@@ -12,14 +12,14 @@
   top: 30px;
 }
 .hud-brand {
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   letter-spacing: 0.16em;
   margin-bottom: 27px;
   color: #c7e1ef;
 }
 .hud-top-left small,
 .hud-top-right small {
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   color: #afc3d5;
 }
 .hud-top-left h2,
@@ -45,7 +45,7 @@
   margin-top: 8px;
 }
 .unit {
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   color: var(--muted);
 }
 .heading {
@@ -56,7 +56,7 @@
   width: 300px;
   display: flex;
   justify-content: space-between;
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   color: #96aabe;
 }
 .heading b {
@@ -149,7 +149,7 @@
   width: 190px;
 }
 .hud-bottom-left > small {
-  font-size: 0.7rem;
+  font-size: 0.75rem;
 }
 .velocity {
   display: flex;
@@ -163,7 +163,7 @@
   font-variant-numeric: tabular-nums;
 }
 .velocity > span:last-child {
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   color: #a1b9cc;
 }
 .speed-track {
@@ -179,7 +179,7 @@
 }
 .hud-bottom-left p {
   color: #9bb1c2;
-  font-size: 0.6rem;
+  font-size: 0.75rem;
   letter-spacing: 0.12em;
   margin-top: 12px;
 }
@@ -196,7 +196,7 @@
   min-height: 32px;
 }
 .hud-bottom-right small {
-  font-size: 0.7rem;
+  font-size: 0.75rem;
 }
 .hud-bottom-right span,
 .hud-bottom-right button {
@@ -215,7 +215,7 @@
   white-space: nowrap;
 }
 .flight-shortcuts button {
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   color: #b6c6d5;
   padding: 5px;
 }
@@ -246,7 +246,7 @@
   position: absolute;
   transform: translate(-50%, -50%);
   color: #d6e9f6;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   text-shadow: 0 2px 8px #000;
   white-space: nowrap;
 }
@@ -273,7 +273,7 @@
 }
 .target-indicator small {
   color: #c5e2ed;
-  font-size: 0.65rem;
+  font-size: 0.75rem;
 }
 #cockpit {
   position: fixed;
@@ -318,7 +318,7 @@
   bottom: 13px;
   width: 100%;
   text-align: center;
-  font-size: 0.6rem;
+  font-size: 0.75rem;
   letter-spacing: 0.25em;
   color: #9dc5d9;
 }
@@ -382,10 +382,10 @@
     justify-content: center;
   }
   .flight-shortcuts button {
-    font-size: 0;
+    font-size: 0.75rem;
   }
   .flight-shortcuts kbd {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     margin: 0;
   }
   .hud-bottom-left {
@@ -405,10 +405,10 @@
     top: 30px;
   }
   .hud-brand {
-    font-size: 0.6rem;
+    font-size: 0.75rem;
   }
   .hud-top-right .quiet {
-    font-size: 0.65rem;
+    font-size: 0.75rem;
   }
   .hud-top-left p {
     max-width: 150px;
@@ -418,7 +418,7 @@
   }
   .mouse-hint {
     bottom: 45px;
-    font-size: 0.65rem;
+    font-size: 0.75rem;
     white-space: nowrap;
   }
   #toast {

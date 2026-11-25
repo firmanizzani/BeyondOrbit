@@ -12,6 +12,8 @@ export class Controls {
           'Space',
           'ControlLeft',
           'ControlRight',
+          'ShiftLeft',
+          'ShiftRight',
           'KeyW',
           'KeyS',
           'KeyA',

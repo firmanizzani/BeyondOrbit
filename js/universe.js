@@ -1,6 +1,6 @@
 import * as T from '../vendor/three.module.js';
 import { Planet, textureFor, atmosphere } from './planet.js';
-export function disposeTree(root) {
+export function disposeTree(root, retainedTextures = new Set()) {
   const geometries = new Set(),
     materials = new Set(),
     textures = new Set();
@@ -17,7 +17,9 @@ export function disposeTree(root) {
   });
   geometries.forEach((x) => x.dispose());
   materials.forEach((x) => x.dispose());
-  textures.forEach((x) => x.dispose());
+  textures.forEach((x) => {
+    if (!retainedTextures.has(x)) x.dispose();
+  });
   root.removeFromParent();
 }
 export class Universe {
@@ -94,8 +96,8 @@ export class Universe {
     }
     this.scene.add(this.background);
   }
-  async load(system, settings, onProgress = () => {}) {
-    if (this.group) disposeTree(this.group);
+  async load(system, settings, onProgress = () => {}, preview = false) {
+    if (this.group) disposeTree(this.group, new Set([this.cloudTexture]));
     this.group = new T.Group();
     this.scene.add(this.group);
     this.planets = [];
@@ -132,7 +134,9 @@ export class Universe {
     );
     glow.scale.set(700, 700, 1);
     this.group.add(glow);
-    const data = this.data.filter((p) => p.system === system.id);
+    const data = this.data.filter(
+      (p) => p.system === system.id && (!preview || p.id === 'earth'),
+    );
     for (let i = 0; i < data.length; i++) {
       const p = new Planet(data[i], textureFor(data[i]));
       this.group.add(p.group, p.orbit);

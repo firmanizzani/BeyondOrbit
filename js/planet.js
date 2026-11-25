@@ -1,5 +1,7 @@
 import * as T from '../vendor/three.module.js';
 const fract = (x) => x - Math.floor(x);
+// Cache CPU canvases only; system disposal still releases every GPU texture.
+const imageCache = new Map();
 const hash = (x, y, seed) =>
   fract(Math.sin(x * 127.1 + y * 311.7 + seed * 74.7) * 43758.5453);
 function noise(x, y, s) {
@@ -27,6 +29,12 @@ function fbm(x, y, s) {
   return n;
 }
 export function textureFor(data) {
+  if (imageCache.has(data.id)) {
+    const texture = new T.CanvasTexture(imageCache.get(data.id));
+    texture.colorSpace = T.SRGBColorSpace;
+    texture.anisotropy = 4;
+    return texture;
+  }
   const width = 768,
     height = 384,
     c = document.createElement('canvas');
@@ -122,6 +130,8 @@ export function textureFor(data) {
       img.data[i + 3] = 255;
     }
   ctx.putImageData(img, 0, 0);
+  imageCache.set(data.id, c);
+  if (imageCache.size > 8) imageCache.delete(imageCache.keys().next().value);
   const tex = new T.CanvasTexture(c);
   tex.colorSpace = T.SRGBColorSpace;
   tex.anisotropy = 4;
@@ -132,10 +142,29 @@ export function atmosphere(radius, color) {
     new T.SphereGeometry(radius * 1.045, 48, 32),
     new T.ShaderMaterial({
       uniforms: { glowColor: { value: new T.Color(color) }, power: { value: 4.6 } },
-      vertexShader:
-        'varying vec3 vNormal;varying vec3 vPosition;void main(){vec4 p=modelViewMatrix*vec4(position,1.0);vPosition=p.xyz;vNormal=normalize(normalMatrix*normal);gl_Position=projectionMatrix*p;}',
-      fragmentShader:
-        'uniform vec3 glowColor;uniform float power;varying vec3 vNormal;varying vec3 vPosition;void main(){float rim=pow(1.0-abs(dot(normalize(vNormal),normalize(-vPosition))),power);gl_FragColor=vec4(glowColor,rim*0.65);}',
+      vertexShader: `
+        varying vec3 vNormal;
+        varying vec3 vPosition;
+        void main() {
+          vec4 p = modelViewMatrix * vec4(position, 1.0);
+          vPosition = p.xyz;
+          vNormal = normalize(normalMatrix * normal);
+          gl_Position = projectionMatrix * p;
+        }
+      `,
+      fragmentShader: `
+        uniform vec3 glowColor;
+        uniform float power;
+        varying vec3 vNormal;
+        varying vec3 vPosition;
+        void main() {
+          float rim = pow(
+            1.0 - abs(dot(normalize(vNormal), normalize(-vPosition))),
+            power
+          );
+          gl_FragColor = vec4(glowColor, rim * 0.45);
+        }
+      `,
       transparent: true,
       blending: T.AdditiveBlending,
       depthWrite: false,

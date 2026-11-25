@@ -22,45 +22,65 @@
     <div class="vignette" aria-hidden="true"></div>
     <main id="menu" class="screen">
       <header class="menu-top">
-        <a class="wordmark" href="#" aria-label="Beyond Orbit home"
-          ><svg viewBox="0 0 48 48" aria-hidden="true">
+        <a class="wordmark" href="#" aria-label="Beyond Orbit home">
+          <svg viewBox="0 0 48 48" aria-hidden="true">
             <circle cx="24" cy="24" r="11" />
             <ellipse cx="24" cy="24" rx="23" ry="8" transform="rotate(-35 24 24)" />
           </svg>
-          BEYOND ORBIT</a
-        ><span class="edition">An open universe. Your own journey.</span
-        ><button id="audio-toggle" class="quiet" aria-label="Toggle audio">
+          BEYOND ORBIT
+        </a>
+        <span class="edition">An open universe. Your own journey.</span>
+        <button id="audio-toggle" class="quiet" aria-label="Toggle audio">
           Sound on
         </button>
       </header>
       <div class="menu-copy">
-        <p class="menu-kicker">A SPACE EXPLORATION EXPERIENCE</p>
-        <h1>BEYOND<br />ORBIT<span class="title-dot">.</span></h1>
-        <p class="tagline">Explore the unknown.<br />Journey beyond the stars.</p>
+        <p class="menu-kicker">A space exploration experience</p>
+        <h1>
+          BEYOND
+          <br />
+          ORBIT
+          <span class="title-dot">.</span>
+        </h1>
+        <p class="tagline">
+          Explore the unknown.
+          <br />
+          Journey beyond the stars.
+        </p>
         <nav class="menu-nav" aria-label="Main menu">
           <button data-action="new" class="primary start-button">
-            <span>New Game</span
-            ><svg viewBox="0 0 24 24" aria-hidden="true">
+            <span>New Game</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="m9 5 10 7-10 7z" />
-            </svg></button
-          ><button data-action="continue" id="continue-button" disabled>
-            Continue <span id="save-caption">No saved journey</span></button
-          ><button data-action="journal">Discovery Journal</button
-          ><button data-action="settings">Settings</button
-          ><button data-action="help">How to Play</button>
+            </svg>
+          </button>
+          <button data-action="continue" id="continue-button" disabled>
+            Continue
+            <span id="save-caption">No saved journey</span>
+          </button>
+          <button data-action="journal">Discovery Journal</button>
+          <button data-action="settings">Settings</button>
+          <button data-action="help">How to Play</button>
         </nav>
       </div>
       <div class="menu-location">
         <span class="location-line"></span>
         <div>
-          <span class="micro">YOUR JOURNEY BEGINS HERE</span><strong>Earth</strong
-          ><span>Solar System · The pale blue dot</span>
+          <span class="micro">Your journey begins here</span>
+          <strong>Earth</strong>
+          <span>Solar System · The pale blue dot</span>
         </div>
       </div>
       <footer class="menu-footer">
-        <span>THE UNIVERSE IS YOURS TO EXPLORE</span
-        ><span>5 star systems <i>·</i> 24 worlds <i>·</i> Endless possibility</span
-        ><span>V 1.0</span>
+        <span>The universe is yours to explore</span>
+        <span>
+          5 star systems
+          <i>·</i>
+          24 worlds
+          <i>·</i>
+          Endless possibility
+        </span>
+        <span>V 1.0</span>
       </footer>
     </main>
     <section id="hud" class="screen hidden" aria-label="Flight instruments">
@@ -71,53 +91,89 @@
         <p id="nearby">Deep space</p>
       </div>
       <div class="heading">
-        <span>270</span><span>300</span><b id="heading">N · 000°</b><span>060</span
-        ><span>090</span>
+        <span>270</span>
+        <span>300</span>
+        <b id="heading">N · 000°</b>
+        <span>060</span>
+        <span>090</span>
         <div class="heading-ticks"></div>
       </div>
       <div class="hud-top-right">
         <small>Navigation target</small>
         <h2 id="target-name">Earth</h2>
-        <p><span id="target-distance">0</span> <span class="unit">km</span></p>
-        <button class="quiet" data-action="map">Change destination <kbd>M</kbd></button>
+        <p>
+          <span id="target-distance">0</span>
+          <span class="unit">km</span>
+        </p>
+        <button class="quiet" data-action="map">
+          Change destination
+          <kbd>M</kbd>
+        </button>
       </div>
       <div class="crosshair" aria-hidden="true">
-        <span></span><span></span><span></span><span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
       </div>
       <div id="target-indicator" class="target-indicator hidden">
-        <span>◇</span><small id="indicator-name"></small>
+        <span>◇</span>
+        <small id="indicator-name"></small>
       </div>
       <div id="scan-context" class="scan-context">
-        <span id="scan-text">Scanner standby</span
-        ><button id="scan-button" data-action="scan"><kbd>F</kbd> Scan planet</button
-        ><progress id="scan-progress" value="0" max="1" class="hidden"></progress>
+        <span id="scan-text">Scanner standby</span>
+        <button id="scan-button" data-action="scan">
+          <kbd>F</kbd>
+          Scan planet
+        </button>
+        <progress id="scan-progress" value="0" max="1" class="hidden"></progress>
       </div>
       <div class="hud-bottom-left">
         <small>Velocity</small>
-        <div class="velocity"><span id="velocity">0</span><span>km/s</span></div>
+        <div class="velocity">
+          <span id="velocity">0</span>
+          <span>km/s</span>
+        </div>
         <div class="speed-track"><i id="speed-fill"></i></div>
         <p id="thrust-status">FLIGHT ASSIST ON</p>
       </div>
       <div class="hud-bottom-right">
-        <div><small>Scanner</small><span id="scanner-status">Standby</span></div>
         <div>
-          <small>Autopilot</small
-          ><button data-action="autopilot" id="autopilot-status">
-            Offline <kbd>P</kbd>
+          <small>Scanner</small>
+          <span id="scanner-status">Standby</span>
+        </div>
+        <div>
+          <small>Autopilot</small>
+          <button data-action="autopilot" id="autopilot-status">
+            Offline
+            <kbd>P</kbd>
           </button>
         </div>
         <div>
-          <small>View</small
-          ><button data-action="camera" id="camera-status">
-            Third person <kbd>C</kbd>
+          <small>View</small>
+          <button data-action="camera" id="camera-status">
+            Third person
+            <kbd>C</kbd>
           </button>
         </div>
       </div>
       <nav class="flight-shortcuts" aria-label="Flight shortcuts">
-        <button data-action="map"><kbd>M</kbd> Galaxy map</button
-        ><button data-action="journal"><kbd>J</kbd> Journal</button
-        ><button data-action="cinematic"><kbd>H</kbd> Cinematic</button
-        ><button data-action="pause"><kbd>Esc</kbd> Pause</button>
+        <button data-action="map">
+          <kbd>M</kbd>
+          Galaxy map
+        </button>
+        <button data-action="journal">
+          <kbd>J</kbd>
+          Journal
+        </button>
+        <button data-action="cinematic">
+          <kbd>H</kbd>
+          Cinematic
+        </button>
+        <button data-action="pause">
+          <kbd>Esc</kbd>
+          Pause
+        </button>
       </nav>
       <button id="mouse-hint" class="mouse-hint" data-action="lock">
         Click space to steer · W to accelerate
@@ -141,8 +197,8 @@
       <div class="loading-orbit"></div>
       <p>BEYOND ORBIT</p>
       <h2 id="loading-destination">Preparing the universe</h2>
-      <progress id="loading-progress" max="1" value="0.1"></progress
-      ><span id="loading-caption">Initializing flight systems</span>
+      <progress id="loading-progress" max="1" value="0.1"></progress>
+      <span id="loading-caption">Initializing flight systems</span>
     </section>
     <div id="warp-overlay" class="screen hidden">
       <span>WARP DRIVE ENGAGED</span>
@@ -150,9 +206,9 @@
       <p>Journey beyond the stars.</p>
     </div>
     <div id="toast" role="status" aria-live="polite"></div>
-    <noscript
-      ><div class="fatal">Enable JavaScript to explore Beyond Orbit.</div></noscript
-    >
+    <noscript>
+      <div class="fatal">Enable JavaScript to explore Beyond Orbit.</div>
+    </noscript>
     <script type="module" src="js/main.js"></script>
   </body>
 </html>
