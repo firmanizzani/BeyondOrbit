@@ -62,7 +62,7 @@ export class Autopilot {
       if (o.position === target.position) continue;
       const rel = o.position.clone().sub(ship.position),
         along = rel.dot(routeDirection),
-        clearance = o.radius + 35;
+        clearance = o.radius + (o.kind === 'asteroid' ? 10 : 35);
       const lateral = rel.clone().addScaledVector(routeDirection, -along).length();
       if (along > 0 && lateral < clearance) {
         obstacleSpeed = Math.min(
@@ -71,7 +71,7 @@ export class Autopilot {
         );
       }
       if (
-        !this.detour &&
+        o.position !== this.detour?.center &&
         along > 0 &&
         along <
           Math.min(routeLength, Math.max(260, ship.velocity.length() * 3) + clearance) &&
@@ -92,7 +92,7 @@ export class Autopilot {
           side.crossVectors(routeDirection, new T.Vector3(1, 0, 0));
       }
       side.normalize();
-      const clearance = blocker.radius + 55;
+      const clearance = blocker.radius + (blocker.kind === 'asteroid' ? 16 : 55);
       const lateralOffset = side.multiplyScalar(clearance * 1.7);
       this.detour = {
         name: blocker.name || 'obstacle',
@@ -102,6 +102,21 @@ export class Autopilot {
           lateralOffset.clone().addScaledVector(routeDirection, clearance),
         ],
       };
+      if (blocker.kind === 'asteroid') {
+        // Cross a dense belt on one announced, gradual bypass rather than
+        // zigzagging between individual pebbles or stacking stale waypoints.
+        const altitude = ship.position.y < -10 ? -110 : 110;
+        const entry = ship.position
+          .clone()
+          .addScaledVector(routeDirection, Math.max(35, closestAlong - 170));
+        const exit = blocker.position.clone().addScaledVector(routeDirection, 250);
+        entry.y = exit.y = altitude;
+        this.detour = {
+          name: 'asteroid belt',
+          center: new T.Vector3(),
+          offsets: [entry, exit],
+        };
+      }
       destination = this.detour.center.clone().add(this.detour.offsets[0]);
     }
 

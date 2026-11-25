@@ -12,6 +12,7 @@ Built from [`build.md`](build.md) and [`prd.md`](prd.md) with HTML, CSS, Vanilla
 - **A custom spacecraft:** detailed hull, cockpit, swept wings, engine pods, nozzles, fins, illuminated accents, and exhaust particles.
 - **Five distinct star systems:** 24 configurable planets, each with its own appearance and survey information.
 - **Living space environments:** rotating and orbiting planets, procedural surface textures, atmospheric glow, rings, moons, nebulae, thousands of stars, and an instanced asteroid belt.
+- **Varied asteroid fields:** four irregular rock shapes, rough mineral surfaces, varied sizes, and a three-dimensional belt with 160 / 360 / 600 rocks on Low / Medium / High.
 - **Planet scanner:** a timed survey that records discoveries, prevents duplicates, and cancels when you leave scanning range.
 - **Interactive Galaxy Map:** select local destinations or activate Warp Drive to travel between star systems.
 - **Autopilot:** automatic steering, stable obstacle detours, gradual acceleration and braking, animated banking, and arrival at a safe scanning distance. The HUD names the object being avoided. Manual input takes over immediately.
@@ -126,6 +127,7 @@ js/
   flight.js         Shared acceleration, speed, and braking configuration
   rendering.js      Bright-pass bloom composite
   universe.js       Active system, background, asteroids, and disposal
+  asteroids.js      Instanced rock variants, belt distribution, and collision bounds
   planet.js         Textures, atmospheres, planets, rings, and moons
   spaceship.js      Ship model, physics, engines, and collisions
   controls.js       Keyboard, mouse, pointer lock, and focus handling

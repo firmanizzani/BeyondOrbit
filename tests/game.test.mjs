@@ -12,6 +12,7 @@ import { Game } from '../js/game.js';
 import { disposeTree } from '../js/universe.js';
 import { Controls } from '../js/controls.js';
 import { CameraRig } from '../js/camera.js';
+import { AsteroidBelt } from '../js/asteroids.js';
 import { FLIGHT } from '../js/flight.js';
 
 const systems = JSON.parse(
@@ -330,6 +331,7 @@ test('Solar System routes avoid neighbouring planets, moons, and the star', () =
       const worlds = solar.map((data) => new Planet(data, null));
       const source = worlds.find((p) => p.data.id === origin);
       const target = worlds.find((p) => p.data.id === destination.id);
+      const belt = new AsteroidBelt(systems[0], worlds);
       const ship = new Spaceship(new T.Scene());
       ship.position.copy(source.position).add(new T.Vector3(-38, 14, 104));
       const game = { ship, target, universe: { obstacles: [] }, ui: { toast() {} } };
@@ -341,10 +343,18 @@ test('Solar System routes avoid neighbouring planets, moons, and the star', () =
         game.universe.obstacles = [
           { name: 'Sun', position: new T.Vector3(), radius: 63 },
           ...worlds.flatMap((p) => p.obstacles()),
+          ...belt.obstacles,
         ];
         pilot.update(1 / 30);
         ship.update(1 / 30, input(), settings, pilot.active);
-        assert.equal(ship.collide(game.universe.obstacles), false, route);
+        const obstacle = game.universe.obstacles.find(
+          (o) => ship.position.distanceTo(o.position) < o.radius + 3,
+        );
+        assert.equal(
+          ship.collide(game.universe.obstacles),
+          false,
+          `${route}: ${obstacle?.name}; detour ${pilot.detour?.name}`,
+        );
       }
       assert.equal(pilot.active, false, `${route} did not arrive`);
     }

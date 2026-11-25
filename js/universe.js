@@ -1,5 +1,6 @@
 import * as T from '../vendor/three.module.js';
 import { Planet, textureFor, atmosphere } from './planet.js';
+import { AsteroidBelt } from './asteroids.js';
 export function disposeTree(root, retainedTextures = new Set()) {
   const geometries = new Set(),
     materials = new Set(),
@@ -144,27 +145,8 @@ export class Universe {
       onProgress((i + 1) / data.length);
       await new Promise((r) => setTimeout(r, 0));
     }
-    const geo = new T.IcosahedronGeometry(1, 0),
-      mat = new T.MeshStandardMaterial({ color: '#7a716c', roughness: 1 });
-    this.asteroids = new T.InstancedMesh(geo, mat, 380);
-    const dummy = new T.Object3D();
-    this.asteroidObstacles = [];
-    for (let i = 0; i < 380; i++) {
-      const a = i * 2.39996,
-        r = 680 + Math.sin(i * 11.7) * 55;
-      dummy.position.set(Math.cos(a) * r, Math.sin(i * 7.1) * 17, Math.sin(a) * r);
-      dummy.rotation.set(i, i * 0.7, i * 0.3);
-      const size = 1.1 + Math.abs(Math.sin(i * 8.7)) * 3.4;
-      dummy.scale.set(size, size * 0.7, size * 0.9);
-      dummy.updateMatrix();
-      this.asteroids.setMatrixAt(i, dummy.matrix);
-      this.asteroidObstacles.push({
-        name: 'asteroid',
-        position: dummy.position.clone(),
-        radius: size + 4,
-      });
-    }
-    this.group.add(this.asteroids);
+    this.belt = new AsteroidBelt(system, this.planets);
+    this.group.add(this.belt.group);
     this.applySettings(settings);
     this.update(0);
   }
@@ -173,7 +155,7 @@ export class Universe {
     this.planets.forEach((p) => (p.orbit.visible = s.orbits));
     const count = { low: 1200, medium: 3400, high: 6500 }[s.particles];
     this.stars.geometry.setDrawRange(0, count);
-    this.asteroids.count = { low: 100, medium: 220, high: 380 }[s.quality];
+    this.belt.setQuality(s.quality);
     this.corona.visible = s.bloom;
     this.nebula.forEach((x) => (x.visible = s.particles !== 'low'));
   }
@@ -182,7 +164,7 @@ export class Universe {
     this.obstacles = [
       { name: 'star', position: new T.Vector3(), radius: 63 },
       ...this.planets.flatMap((p) => p.obstacles()),
-      ...this.asteroidObstacles.slice(0, this.asteroids.count),
+      ...this.belt.obstacles,
     ];
   }
   followBackground(position) {
