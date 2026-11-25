@@ -1,0 +1,7 @@
+[
+ {"id":"solar","name":"Solar System","color":"#7cafff","starColor":"#fff0c2","nebula":["#18364b","#332b52"],"map":[26,62],"description":"Our familiar corner of the cosmos. Eight extraordinary worlds orbit a warm yellow star.","fictional":false},
+ {"id":"centauri","name":"Alpha Centauri","color":"#ffd7a0","starColor":"#ffd6a0","nebula":["#3b2f24","#152e39"],"map":[52,37],"description":"Golden light falls across rocky frontiers and distant ocean worlds. A new home may be waiting here.","fictional":true},
+ {"id":"nebula","name":"Nebula Prime","color":"#c3a4ff","starColor":"#d7b4ff","nebula":["#51236d","#692b4b"],"map":[78,22],"description":"Violet clouds conceal five enigmatic worlds, illuminated by a brilliant young star.","fictional":true},
+ {"id":"cryon","name":"Cryon System","color":"#a3eafa","starColor":"#acdfff","nebula":["#143b52","#15304c"],"map":[22,24],"description":"An ocean of silence. Frozen moons and crystalline worlds circle a cold blue sun.","fictional":true},
+ {"id":"vulcan","name":"Vulcan System","color":"#ff987b","starColor":"#ff9b62","nebula":["#622a22","#3e1b32"],"map":[73,72],"description":"A restless red star watches over rivers of molten rock and volcanic horizons.","fictional":true}
+]
