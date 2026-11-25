@@ -129,6 +129,13 @@ export class Spaceship {
   }
   update(dt, input, settings, autopilot = false) {
     if (!autopilot) {
+      const { x, y } = input.consumeMouse();
+      const yaw = -x * 0.0015 * settings.sensitivity,
+        pitch = -y * 0.0015 * settings.sensitivity * (settings.invertY ? -1 : 1);
+      const roll = (Number(input.has('KeyQ')) - Number(input.has('KeyE'))) * dt * 1.3;
+      this.quaternion
+        .multiply(new T.Quaternion().setFromEuler(new T.Euler(pitch, yaw, roll, 'YXZ')))
+        .normalize();
       const boost = input.has('ShiftLeft') || input.has('ShiftRight'),
         direction = new T.Vector3(
           Number(input.has('KeyD')) - Number(input.has('KeyA')),
@@ -136,6 +143,15 @@ export class Spaceship {
             Number(input.has('ControlLeft') || input.has('ControlRight')),
           Number(input.has('KeyS')) - Number(input.has('KeyW')),
         );
+      // Flight assist removes sideways drift in the ship's current frame while
+      // preserving deliberate strafe input and forward acceleration.
+      const localVelocity = this.velocity
+        .clone()
+        .applyQuaternion(this.quaternion.clone().invert());
+      const lateralDamping = Math.exp(-FLIGHT.lateralDrag * dt);
+      if (direction.x === 0) localVelocity.x *= lateralDamping;
+      if (direction.y === 0) localVelocity.y *= lateralDamping;
+      this.velocity.copy(localVelocity.applyQuaternion(this.quaternion));
       if (direction.lengthSq() > 0)
         direction.normalize().applyQuaternion(this.quaternion);
       this.velocity.addScaledVector(
@@ -146,13 +162,6 @@ export class Spaceship {
         Math.exp(-dt * (input.has('Space') ? FLIGHT.brakeDrag : FLIGHT.drag)),
       );
       this.velocity.clampLength(0, boost ? FLIGHT.boostSpeed : FLIGHT.cruiseSpeed);
-      const { x, y } = input.consumeMouse();
-      const yaw = -x * 0.0015 * settings.sensitivity,
-        pitch = -y * 0.0015 * settings.sensitivity * (settings.invertY ? -1 : 1);
-      const roll = (Number(input.has('KeyQ')) - Number(input.has('KeyE'))) * dt * 1.3;
-      this.quaternion
-        .multiply(new T.Quaternion().setFromEuler(new T.Euler(pitch, yaw, roll, 'YXZ')))
-        .normalize();
       this.bank = T.MathUtils.lerp(
         this.bank,
         T.MathUtils.clamp(-yaw * 12, -0.4, 0.4),

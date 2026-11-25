@@ -81,6 +81,8 @@ Manual thrust or mouse steering cancels autopilot. Held inputs are cleared when 
 
 Manual flight and autopilot share a **210 km/s** cruise limit. Holding W reaches cruise speed in approximately **1.8 seconds**; W + Shift raises the limit to **320 km/s**. Release thrust to coast or hold Space to brake.
 
+Flight assist stabilizes lateral drift after turning or releasing strafe input. The chase camera follows the ship's position directly while smoothing its rotation, keeping the spacecraft centered even during high-speed turns.
+
 ## The Galaxy
 
 | Star system    | Planets                                                       |

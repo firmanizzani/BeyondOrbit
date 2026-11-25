@@ -132,6 +132,38 @@ test('manual takeover preserves autopilot cruise speed without an abrupt speed c
   assert.ok(ship.velocity.length() >= FLIGHT.cruiseSpeed - 1);
 });
 
+test('forward thrust follows the new heading on the same steering frame', () => {
+  const ship = new Spaceship(new T.Scene());
+  const steering = {
+    has: (key) => key === 'KeyW',
+    consumeMouse: () => ({ x: 250, y: -100 }),
+  };
+  ship.update(1 / 60, steering, settings);
+  assert.ok(ship.velocity.clone().normalize().dot(ship.forward()) > 0.999);
+});
+
+test('flight assist cancels residual sideways drift after turns and released strafe', () => {
+  for (const rate of [30, 60, 144]) {
+    const ship = new Spaceship(new T.Scene());
+    ship.velocity.set(0, 0, -FLIGHT.cruiseSpeed);
+    ship.quaternion.setFromAxisAngle(new T.Vector3(0, 1, 0), Math.PI / 2);
+    for (let i = 0; i < rate; i++) ship.update(1 / rate, input(['KeyW']), settings);
+    const local = ship.velocity.clone().applyQuaternion(ship.quaternion.clone().invert());
+    assert.ok(Math.abs(local.x) < 0.1, `Sideways drift at ${rate} Hz: ${local.x}`);
+    assert.ok(-local.z > 100);
+    for (let i = 0; i < rate / 2; i++) ship.update(1 / rate, input(['KeyD']), settings);
+    const strafing = ship.velocity
+      .clone()
+      .applyQuaternion(ship.quaternion.clone().invert());
+    assert.ok(strafing.x > 50, 'Deliberate strafing should remain available');
+    for (let i = 0; i < rate; i++) ship.update(1 / rate, input(['KeyW']), settings);
+    const settled = ship.velocity
+      .clone()
+      .applyQuaternion(ship.quaternion.clone().invert());
+    assert.ok(Math.abs(settled.x) < 0.1);
+  }
+});
+
 test('sphere collisions preserve tangential flight and reject inward velocity', () => {
   const ship = new Spaceship(new T.Scene());
   ship.position.set(0, 0, 12);
@@ -433,6 +465,40 @@ test('camera mode restores the ship and narrow views retain its full wingspan', 
     assert.ok(camera.position.distanceTo(ship.position) > wideDistance);
   } finally {
     globalThis.document = previousDocument;
+    globalThis.window = previousWindow;
+  }
+});
+
+test('chase camera keeps the ship centered through high-speed turns at every zoom', () => {
+  const previousWindow = globalThis.window;
+  globalThis.window = { addEventListener() {} };
+  try {
+    for (const rate of [30, 60, 144]) {
+      for (const distance of [6, 11, 24]) {
+        const ship = new Spaceship(new T.Scene());
+        const camera = new T.PerspectiveCamera(55, 16 / 9, 0.1, 7000);
+        const rig = new CameraRig(camera, ship);
+        rig.distance = distance;
+        rig.update(0);
+        for (let i = 0; i < rate * 2; i++) {
+          ship.quaternion.multiply(
+            new T.Quaternion().setFromAxisAngle(new T.Vector3(0, 1, 0), 2 / rate),
+          );
+          ship.velocity.copy(ship.forward()).multiplyScalar(FLIGHT.boostSpeed);
+          ship.position.addScaledVector(ship.velocity, 1 / rate);
+          rig.update(1 / rate);
+          camera.updateMatrixWorld();
+          const screen = ship.position.clone().project(camera);
+          assert.ok(
+            Math.abs(screen.x) < 0.00001,
+            `Camera drift at ${rate} Hz, zoom ${distance}`,
+          );
+          assert.ok(screen.y > -0.8 && screen.y < 0);
+          assert.ok(screen.z > -1 && screen.z < 1);
+        }
+      }
+    }
+  } finally {
     globalThis.window = previousWindow;
   }
 });

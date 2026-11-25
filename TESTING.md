@@ -6,7 +6,7 @@ Tested on November 25, 2026, against the static application served by `npm start
 
 Run `npm test` with Node.js 22 or newer. The suite uses the actual game modules and bundled Three.js, with small fixtures for browser storage and survey notifications.
 
-All **18 tests passed**:
+All **21 tests passed**:
 
 1. Exactly five systems and 24 unique, fully configured planets.
 2. Translation in all six directions and roll input.
@@ -26,6 +26,9 @@ All **18 tests passed**:
 16. Restoring spacecraft visibility after cockpit mode and adapting camera distance for narrow views.
 17. Responsive manual acceleration to autopilot cruise speed within two seconds at 30, 60, and 144 simulation steps per second.
 18. Manual takeover from autopilot without an abrupt speed reduction.
+19. Forward thrust aligned with the new heading on the same mouse-steering frame.
+20. Sideways drift stabilization after turns and released strafe input at 30, 60, and 144 simulation steps per second.
+21. Centered chase-camera projection during boost-speed turns at 30, 60, and 144 steps per second and minimum, default, and maximum zoom.
 
 Autopilot tests advance real steering and flight physics at 60 simulation steps per second. These tests verify logic; they do not constitute a GPU frame-rate benchmark.
 

@@ -5,5 +5,6 @@ export const FLIGHT = Object.freeze({
   boostAcceleration: 340,
   boostSpeed: 320,
   drag: 0.42,
+  lateralDrag: 8,
   brakeDrag: 7,
 });

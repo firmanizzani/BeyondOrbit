@@ -25,15 +25,16 @@ export class CameraRig {
     const first = this.mode === 'first';
     // Keep the wingspan visible in narrow desktop preview panes.
     const followDistance = this.distance * Math.max(1, 1.45 / this.camera.aspect);
+    const t = this.initial ? 1 : 1 - Math.exp(-dt * (first ? 18 : 10));
+    this.camera.quaternion.slerp(this.ship.quaternion, t);
     const offset = new T.Vector3(
       0,
-      first ? 0.65 : 3,
+      first ? 0.65 : Math.min(3, followDistance * 0.25),
       first ? -1.4 : followDistance,
-    ).applyQuaternion(this.ship.quaternion);
-    const desired = this.ship.position.clone().add(offset);
-    const t = this.initial ? 1 : 1 - Math.exp(-dt * (first ? 18 : 6));
-    this.camera.position.lerp(desired, t);
-    this.camera.quaternion.slerp(this.ship.quaternion, t);
+    ).applyQuaternion(this.camera.quaternion);
+    // Smooth rotation, but anchor translation to the ship. Smoothing world position
+    // introduces a speed-dependent lag that throws the ship sideways during turns.
+    this.camera.position.copy(this.ship.position).add(offset);
     this.initial = false;
   }
 }
