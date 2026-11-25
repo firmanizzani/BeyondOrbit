@@ -1,0 +1,7 @@
+vendor/
+node_modules/
+.taste-skill/
+test-results/
+build.md
+prd.md
+package-lock.json

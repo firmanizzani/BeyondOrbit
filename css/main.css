@@ -1,0 +1,241 @@
+:root {
+  color-scheme: dark;
+  --space: #050811;
+  --panel: #0b1423;
+  --white: #e7edf5;
+  --muted: #9daec3;
+  --cyan: #42d9f5;
+  --line: rgba(170, 201, 228, 0.17);
+  font-family: 'Segoe UI', Arial, sans-serif;
+  font-size: 16px;
+  font-synthesis: none;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  background: var(--space);
+  color: var(--white);
+  overflow: hidden;
+}
+button,
+input,
+select {
+  font: inherit;
+}
+button,
+a,
+input,
+select {
+  -webkit-tap-highlight-color: transparent;
+}
+button {
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    color 0.2s,
+    transform 0.2s;
+}
+button:hover {
+  color: var(--cyan);
+}
+button:active {
+  transform: translateY(1px);
+}
+button:disabled {
+  opacity: 0.34;
+  cursor: not-allowed;
+}
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 5px;
+}
+button.primary {
+  background: var(--cyan);
+  color: #04121b;
+  padding: 15px 24px;
+  font-weight: 600;
+}
+button.primary:hover {
+  background: #9becfa;
+}
+button.secondary {
+  background: #1c2c40;
+  padding: 13px 20px;
+}
+button.danger {
+  color: #ffab9d;
+}
+button.quiet {
+  color: #b9cada;
+  padding: 8px 0;
+  font-size: 0.875rem;
+}
+button.quiet:hover {
+  color: var(--cyan);
+}
+#universe {
+  position: fixed;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.screen {
+  position: fixed;
+  inset: 0;
+}
+.hidden {
+  display: none !important;
+}
+.vignette {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  box-shadow: inset 0 0 180px 40px #03061080;
+}
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+small,
+.micro {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+kbd {
+  display: inline-grid;
+  place-items: center;
+  min-width: 23px;
+  height: 23px;
+  border: 1px solid #7b97ae55;
+  padding: 0 5px;
+  font:
+    500 0.72rem 'Segoe UI',
+    sans-serif;
+  color: #d9e5f0;
+  border-radius: 3px;
+}
+progress {
+  appearance: none;
+  width: 100%;
+  height: 3px;
+  border: 0;
+  background: #213348;
+}
+progress::-webkit-progress-bar {
+  background: #213348;
+}
+progress::-webkit-progress-value {
+  background: var(--cyan);
+}
+progress::-moz-progress-bar {
+  background: var(--cyan);
+}
+#toast {
+  position: fixed;
+  top: 130px;
+  left: 50%;
+  transform: translate(-50%, -10px);
+  background: #101e30f2;
+  max-width: min(90vw, 600px);
+  padding: 15px 24px;
+  opacity: 0;
+  transition:
+    opacity 0.3s,
+    transform 0.3s;
+  pointer-events: none;
+  z-index: 30;
+  text-align: center;
+  font-size: 0.9rem;
+  border-left: 2px solid var(--cyan);
+}
+#toast.visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+.loading {
+  background: #050811;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 24px;
+  transition: opacity 0.5s;
+}
+.loading p {
+  letter-spacing: 0.3em;
+  font-size: 0.85rem;
+}
+.loading h2 {
+  font-size: clamp(24px, 4vw, 40px);
+  font-weight: 300;
+}
+.loading progress {
+  width: 260px;
+}
+.loading > span {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.loading-orbit {
+  width: 65px;
+  height: 65px;
+  border: 1px solid #24384b;
+  border-top-color: var(--cyan);
+  border-radius: 50%;
+  animation: spin 2s linear infinite;
+}
+.fatal {
+  position: fixed;
+  inset: 0;
+  background: #050811;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  padding: 30px;
+  z-index: 100;
+}
+.fatal p {
+  max-width: 600px;
+  line-height: 1.7;
+  margin: 20px 0;
+}
+.fatal button {
+  padding: 16px;
+  background: var(--cyan);
+  color: #050811;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
