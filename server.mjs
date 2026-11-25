@@ -1,7 +1,8 @@
 import http from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { resolve, extname, sep } from 'node:path';
-const root = process.cwd();
+const root = resolve(process.argv[2] || '.');
+const port = Number(process.argv[3] || 4173);
 const types = {
   '.html': 'text/html',
   '.js': 'text/javascript',
@@ -36,4 +37,4 @@ http
       res.writeHead(404).end('Not found');
     }
   })
-  .listen(4173, '127.0.0.1', () => console.log('Beyond Orbit: http://127.0.0.1:4173'));
+  .listen(port, '127.0.0.1', () => console.log(`Beyond Orbit: http://127.0.0.1:${port}`));

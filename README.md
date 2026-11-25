@@ -26,15 +26,16 @@ Built from [`build.md`](build.md) and [`prd.md`](prd.md) with HTML, CSS, Vanilla
 - **Working settings:** graphics quality, render distance, bloom, particle quality, orbit lines, labels, fullscreen, audio volumes, mouse sensitivity, default camera, and inverted Y axis.
 - **Procedural audio:** audible ambient harmonies, engine and boost sounds, warp sweeps, recurring scanner pulses, discovery chimes, and interface sounds. Settings include separate music and sound-effect preview buttons.
 - **Local saves:** automatic progress and settings storage, save validation, safe recovery from invalid data, and Continue support.
-- **Buildless deployment:** all runtime dependencies are bundled locally and the project can run on static hosting.
+- **Mobile touch controls:** a proportional flight joystick, swipe steering, pinch zoom, boost, braking, vertical movement, roll, and touch actions for map, journal, autopilot, camera, cinematic mode, and pause. These controls stay hidden on desktop and laptops.
+- **Simple static deployment:** all runtime dependencies are bundled locally; a small Node script packages and validates the static files for Vercel.
 
 ## Getting Started
 
 ### Requirements
 
 - Node.js 22 or newer for the included development server.
-- A desktop browser with WebGL 2 and hardware acceleration enabled.
-- A keyboard and mouse. Touch flight controls are outside the project's scope.
+- A browser with WebGL 2 and hardware acceleration enabled.
+- Keyboard and mouse on desktop, or a touchscreen phone / tablet. Landscape orientation is recommended for mobile flight.
 
 ### Run Locally
 
@@ -82,6 +83,27 @@ Modern Chrome, Edge, and Firefox are the compatibility targets. See [Testing](TE
 
 Manual thrust or mouse steering cancels autopilot. Held inputs are cleared when opening a panel, losing browser focus, hiding the tab, or releasing pointer lock. Atmospheric landing is not supported.
 
+### Mobile Controls
+
+On Android phones / tablets, iPhone, and iPad, touch controls appear automatically. Desktop and laptop users retain the existing keyboard and mouse interface, including touchscreen laptops.
+
+| Touch control        | Action                                                                        |
+| -------------------- | ----------------------------------------------------------------------------- |
+| Left joystick        | Up = forward, down = reverse, left / right = strafe; movement is proportional |
+| Swipe open space     | Pitch and yaw                                                                 |
+| Pinch open space     | Adjust third-person camera distance                                           |
+| Up / Down            | Hold for vertical movement                                                    |
+| Roll L / Roll R      | Hold to roll                                                                  |
+| Boost                | Toggle extra speed while using the joystick                                   |
+| Brake                | Hold to brake                                                                 |
+| Scan planet          | Survey a world within range                                                   |
+| Map / Journal / Auto | Navigation, discoveries, and autopilot                                        |
+| View                 | Switch between chase and cockpit cameras                                      |
+| Hide HUD / Show HUD  | Cinematic mode; flight controls remain available                              |
+| Pause                | Resume, settings, guide, or save and return to menu                           |
+
+Touch input resets on cancelled contacts, opening menus, focus loss, and viewport rotation. New mobile installations start with Low graphics, Medium particles, and bloom disabled. Existing settings are preserved, and graphics can still be adjusted. Touch rendering caps pixel ratio at 1.25. These defaults reduce GPU load; physical-device performance still requires testing.
+
 Manual flight and autopilot share a **210 km/s** cruise limit. Holding W reaches cruise speed in approximately **1.8 seconds**; W + Shift raises the limit to **320 km/s**. Release thrust to coast or hold Space to brake.
 
 Flight assist stabilizes lateral drift after turning or releasing strafe input. The chase camera follows the ship's position directly while smoothing its rotation, keeping the spacecraft centered even during high-speed turns.
@@ -123,6 +145,7 @@ css/
   main.css          Shared styles, loading screens, and visual states
   menu.css          Main menu and interactive panels
   hud.css           Flight instruments and cockpit overlay
+  mobile.css        Touch-only controls, safe areas, portrait and landscape layouts
 js/
   main.js           Catalog loading and startup
   game.js           Central game state and single animation loop
@@ -133,6 +156,7 @@ js/
   planet.js         Textures, atmospheres, planets, rings, and moons
   spaceship.js      Ship model, physics, engines, and collisions
   controls.js       Keyboard, mouse, pointer lock, and focus handling
+  mobile.js         Device detection, multitouch input, joystick, and gesture handling
   camera.js         Third-person and cockpit cameras
   navigation.js     HUD, distances, heading, labels, and target markers
   autopilot.js      Steering, deceleration, and obstacle avoidance
@@ -148,6 +172,7 @@ data/
 vendor/             Local Three.js distribution and MIT license
 tests/              Game logic tests using node:test
 server.mjs          Local static development server
+scripts/build.mjs   Static asset packaging and reference validation
 vercel.json         Static hosting configuration
 ```
 
@@ -160,9 +185,11 @@ npm ci
 npm test
 npm run format:check
 npm run format
+npm run build
+npm run preview
 ```
 
-Prettier is a development dependency only. No runtime package installation or compilation step is needed.
+Prettier is a development dependency only. No runtime package installation or compilation is needed. `npm run build` copies only game runtime files into `dist/` and verifies their local imports and assets. `npm run preview` serves that exact output at **http://127.0.0.1:4174**.
 
 Tests cover catalog integrity, movement, boost, braking, collision response, scanning and cancellation, duplicate discoveries, autopilot arrival at all 24 worlds, obstacle avoidance, save validation, settings normalization, storage failures, journal filtering, save-overwrite prevention, and resource disposal.
 
@@ -188,10 +215,12 @@ The bundled runtime, **Three.js 0.180.0**, copyright Three.js authors, is releas
 ## Deploy to Vercel
 
 1. Import **`firmanizzani/BeyondOrbit`** into Vercel.
-2. Select **Other** as the framework preset.
-3. Leave the build command empty and use the repository root (`.`) as the output directory.
-4. Deploy. `vercel.json` provides static output and vendor / JSON cache settings.
+2. Keep the repository root as the Root Directory.
+3. `vercel.json` selects **Other** (`framework: null`), **`npm run build`**, and **`dist`** as the Output Directory automatically.
+4. Deploy. No additional build configuration is needed for a newly imported project.
 
-No environment variables, API keys, backend, or database are needed. For another static host, publish `index.html`, `css/`, `js/`, `data/`, and `vendor/`, serving ES Modules with the correct JavaScript MIME type.
+The generated folder contains only `index.html`, `css/`, `js/`, `data/`, and `vendor/`. Development scripts, tests, and repository notes are excluded. Application JS, CSS, and universe data use revalidation headers so deployments can update the game without a long-lived browser cache. Configuration follows the [Vercel project configuration reference](https://vercel.com/docs/project-configuration/vercel-json).
+
+No environment variables, API keys, backend, or database are needed. For another static host, upload the contents of `dist/`, serving ES Modules with the correct JavaScript MIME type. A local phone cannot reach another computer's `127.0.0.1`; use the deployed Vercel HTTPS URL to play on a phone.
 
 Production deployment requires the owner's Vercel account and project. Configuration is included; a production Vercel deployment has not been performed from this workspace.

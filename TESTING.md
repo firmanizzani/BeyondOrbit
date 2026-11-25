@@ -6,7 +6,7 @@ Tested on November 25, 2026, against the static application served by `npm start
 
 Run `npm test` with Node.js 22 or newer. The suite uses the actual game modules and bundled Three.js, with small fixtures for browser storage and survey notifications.
 
-All **33 tests passed**:
+All **39 tests passed**:
 
 1. Exactly five systems and 24 unique, fully configured planets.
 2. Translation in all six directions and roll input.
@@ -41,10 +41,20 @@ All **33 tests passed**:
 31. Warp animation continuing during delayed destination loading, a covered camera relocation, restored FOV and controls, and a single arrival save.
 32. Reduced-motion warp without star streaks or FOV changes, preserving cockpit mode.
 33. Procedural texture generation yielding between 12-row batches so rendering can continue.
+34. Phone and tablet detection without activating touch controls on desktop touch laptops.
+35. Joystick dead zone, proportional input, and bounded diagonal thrust.
+36. Simultaneous joystick and swipe input, manual autopilot takeover, and actual spacecraft movement.
+37. Releasing held actions and boost after cancellation, panel opening, and viewport rotation.
+38. Two-finger camera zoom without introducing a steering jump.
+39. Cinematic mode retaining touch flight controls and a visible way to restore the HUD.
 
 The latest autopilot revision replaces per-frame upward avoidance impulses and a fixed 48 km/s slowdown with persistent lateral waypoints, bounded velocity changes, roll-preserving turns, and animated banking. The audio revision increases audible frequency content, adds distinct event sounds, and provides channel preview buttons. Both preview buttons were clicked in the browser without console errors; automated audio tests check routing and scheduling, not perceived loudness on physical speakers. Earlier manual observations below describe the original exploration checks.
 
 ### Latest Browser Follow-up
+
+The mobile implementation was checked against the generated `dist/` deployment at 390 × 844 and 844 × 390. The mobile introduction uses touch instructions. Dragging the joystick increased velocity and changed the distance to Earth; Brake returned velocity to zero, and a swipe changed heading. Hide HUD exposed Show HUD while preserving flight controls. Pause hid the touch controls and Resume restored them. The landscape view kept the joystick, action buttons, scanner, and navigation toolbar within the viewport. No console errors were observed. Normal desktop mode did not display the touch overlay. These checks used a desktop browser with the explicit test-only touch mode; physical Android and iOS devices were not tested.
+
+`npm run build` completed successfully and validated 38 local asset references plus the five-system, 24-planet catalog. The generated output loaded successfully through the production preview server. Vercel is configured to build with `npm run build` and publish `dist/`; no production deployment was performed.
 
 The revised first-flight screen, **Begin Flight**, and **Fly with Autopilot** were exercised on a separate `localhost` origin to preserve the existing `127.0.0.1` save. Selecting Mars and choosing the direct flight action engaged autopilot with an explicit avoidance status. The staged warp to Alpha Centauri reached the destination and restored the third-person ship, HUD, and controls without console errors.
 

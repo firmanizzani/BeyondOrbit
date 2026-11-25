@@ -5,3 +5,4 @@ test-results/
 build.md
 prd.md
 package-lock.json
+dist/
