@@ -6,7 +6,7 @@ Tested on November 25, 2026, against the static application served by `npm start
 
 Run `npm test` with Node.js 22 or newer. The suite uses the actual game modules and bundled Three.js, with small fixtures for browser storage and survey notifications.
 
-All **39 tests passed**:
+All **42 tests passed**:
 
 1. Exactly five systems and 24 unique, fully configured planets.
 2. Translation in all six directions and roll input.
@@ -47,10 +47,15 @@ All **39 tests passed**:
 37. Releasing held actions and boost after cancellation, panel opening, and viewport rotation.
 38. Two-finger camera zoom without introducing a steering jump.
 39. Cinematic mode retaining touch flight controls and a visible way to restore the HUD.
+40. Spacecraft preference validation, persistence serialization, and Explorer fallback for old settings.
+41. Model replacement disposing old geometry while preserving position, velocity, and cockpit visibility.
+42. Equal acceleration and braking across Explorer, Interceptor, and Voyager.
 
 The latest autopilot revision replaces per-frame upward avoidance impulses and a fixed 48 km/s slowdown with persistent lateral waypoints, bounded velocity changes, roll-preserving turns, and animated banking. The audio revision increases audible frequency content, adds distinct event sounds, and provides channel preview buttons. Both preview buttons were clicked in the browser without console errors; automated audio tests check routing and scheduling, not perceived loudness on physical speakers. Earlier manual observations below describe the original exploration checks.
 
 ### Latest Browser Follow-up
+
+On November 27, the spacecraft picker was checked at 1280 × 900 and 390 × 844. Interceptor and Voyager rendered in the rotating preview; selection remained after a reload. Selecting Interceptor and continuing an existing journey displayed its violet engines and delta wings in flight. The narrow layout stacked the preview and choices with scrolling. No error-level console messages were observed. Physical phone testing remains outstanding.
 
 Galaxy Map now uses a viewport-bounded panel with a stable chart and action area. At 1440 × 900, all five systems retained the same 1100 × 760 panel, chart dimensions, and action position. Selecting Neptune scrolled its list into view and retained keyboard focus after selection. At 390 × 844, Cryon and Vulcan retained equal panel and content heights, with a stacked chart and reachable Warp action. A short 844 × 390 viewport retained internal scrolling without horizontal document overflow. No console errors were observed during these checks.
 

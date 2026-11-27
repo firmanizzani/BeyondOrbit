@@ -49,7 +49,7 @@ export class Game {
     this.scene = new T.Scene();
     this.camera = new T.PerspectiveCamera(55, innerWidth / innerHeight, 0.1, 14000);
     this.universe = new Universe(this.scene, planetData);
-    this.ship = new Spaceship(this.scene);
+    this.ship = new Spaceship(this.scene, this.settings.spacecraft);
     this.cameraRig = new CameraRig(this.camera, this.ship);
     this.audio = new AudioSystem();
     this.controls = new Controls(this);
@@ -201,6 +201,10 @@ export class Game {
     this.ui.pause();
   }
   action(name) {
+    if (name === 'spacecraft' && this.state === 'menu') {
+      this.ui.spacecraft();
+      return;
+    }
     if (name === 'new') {
       const run = () => this.start(false).catch((e) => this.fail(e));
       if (this.storage.saved)
@@ -323,6 +327,7 @@ export class Game {
       !!this.scanner.planet,
     );
     this.spaceRenderer.render(this.scene, this.camera, this.settings.bloom);
+    this.ui.hangar?.render(dt);
     if (this.flying) {
       this.performanceTime += raw;
       this.performanceFrames++;

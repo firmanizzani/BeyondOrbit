@@ -9,7 +9,7 @@ Built from [`build.md`](build.md) and [`prd.md`](prd.md) with HTML, CSS, Vanilla
 ## Features
 
 - **Free 3D flight:** acceleration, inertia, damping, strafing, vertical movement, pitch, yaw, roll, boost, and braking.
-- **A custom spacecraft:** detailed hull, cockpit, swept wings, engine pods, nozzles, fins, illuminated accents, and exhaust particles.
+- **Three selectable spacecraft:** Explorer, Interceptor, and Voyager have distinct hulls, wings, and engine colors, with identical flight performance. Choose Spacecraft in the main menu offers a rotating 3D preview and a Select button. Your choice is saved locally and applies to both New Game and Continue; previewing another model alone does not change your selection.
 - **Five distinct star systems:** 24 configurable planets, each with its own appearance and survey information.
 - **Living space environments:** rotating and orbiting planets, procedural surface textures, atmospheric glow, rings, moons, nebulae, thousands of stars, and an instanced asteroid belt.
 - **Varied asteroid fields:** four irregular rock shapes, rough mineral surfaces, varied sizes, and a three-dimensional belt with 160 / 360 / 600 rocks on Low / Medium / High.
@@ -155,6 +155,7 @@ js/
   asteroids.js      Instanced rock variants, belt distribution, and collision bounds
   planet.js         Textures, atmospheres, planets, rings, and moons
   spaceship.js      Ship model, physics, engines, and collisions
+  hangar.js         Rotating spacecraft preview and preview resource cleanup
   controls.js       Keyboard, mouse, pointer lock, and focus handling
   mobile.js         Device detection, multitouch input, joystick, and gesture handling
   camera.js         Third-person and cockpit cameras

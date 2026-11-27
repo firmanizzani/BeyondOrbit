@@ -199,6 +199,61 @@
   margin: 30px auto;
   text-align: center;
 }
+.hangar-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 32px;
+}
+.hangar-preview {
+  background: #060d18;
+  min-width: 0;
+}
+#ship-preview {
+  display: block;
+  width: 100%;
+  height: 340px;
+}
+.hangar-preview p {
+  color: var(--muted);
+  font-size: 0.85rem;
+  padding: 16px 20px;
+}
+.ship-choices {
+  display: grid;
+  gap: 12px;
+}
+.ship-choice {
+  text-align: left;
+  padding: 16px;
+  border: 1px solid var(--line);
+}
+.ship-choice[aria-pressed='true'] {
+  border-color: var(--cyan);
+  background: #1d3c50;
+}
+.ship-choice strong,
+.ship-choice span {
+  display: block;
+}
+.ship-choice span {
+  color: #b8c9db;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  margin-top: 8px;
+}
+#ship-selection {
+  color: var(--muted);
+  margin: 20px 0 12px;
+  font-size: 0.85rem;
+}
+@media (max-width: 760px) {
+  .hangar-layout {
+    grid-template-columns: 1fr;
+  }
+  #ship-preview {
+    height: 230px;
+  }
+}
 .pause-content h3 {
   font-size: 2.5rem;
   font-weight: 300;

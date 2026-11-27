@@ -14,6 +14,7 @@ export const defaults = {
   sensitivity: 1,
   camera: 'third',
   invertY: false,
+  spacecraft: 'explorer',
 };
 const finiteArray = (a, n) =>
   Array.isArray(a) &&
@@ -27,6 +28,8 @@ export function validateSettings(value) {
   for (const k of ['quality', 'particles'])
     if (['low', 'medium', 'high'].includes(value[k])) s[k] = value[k];
   if (['first', 'third'].includes(value.camera)) s.camera = value.camera;
+  if (['explorer', 'interceptor', 'voyager'].includes(value.spacecraft))
+    s.spacecraft = value.spacecraft;
   for (const [k, min, max] of [
     ['renderDistance', 2500, 14000],
     ['master', 0, 1],

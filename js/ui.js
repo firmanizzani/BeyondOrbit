@@ -1,6 +1,8 @@
 // Tagged HTML keeps UI markup formatted vertically by Prettier.
 const html = (strings, ...values) => String.raw({ raw: strings }, ...values);
 import { journalPlanets, discoveryProgress } from './journal.js';
+import { SPACECRAFT } from './spaceship.js';
+import { Hangar } from './hangar.js';
 const $ = (s) => document.querySelector(s);
 const esc = (s) =>
   String(s).replace(
@@ -159,6 +161,8 @@ export class UI {
     return true;
   }
   hidePanel() {
+    this.hangar?.dispose();
+    this.hangar = null;
     this.panelOpen = false;
     $('#menu').inert = false;
     $('#hud').inert = false;
@@ -197,6 +201,82 @@ export class UI {
         </nav>
       </div>
     `;
+  }
+  spacecraft() {
+    if (
+      !this.open(
+        'spacecraft',
+        'Choose Spacecraft',
+        'Find your companion for the journey ahead.',
+      )
+    )
+      return;
+    let selected = this.game.settings.spacecraft;
+    $('#panel-body').innerHTML = html`
+      <div class="hangar-layout">
+        <div class="hangar-preview">
+          <canvas
+            id="ship-preview"
+            role="img"
+            aria-label="3D spacecraft preview"
+          ></canvas>
+          <p>Same flight performance. Three distinct silhouettes.</p>
+        </div>
+        <div class="hangar-options">
+          <div class="ship-choices" role="group" aria-label="Spacecraft models">
+            ${SPACECRAFT.map(
+              (ship) => html`
+                <button
+                  class="ship-choice"
+                  data-ship="${ship.id}"
+                  aria-pressed="${ship.id === selected}"
+                >
+                  <strong>${ship.name}</strong>
+                  <span>${ship.description}</span>
+                </button>
+              `,
+            ).join('')}
+          </div>
+          <p id="ship-selection" aria-live="polite"></p>
+          <button class="primary" id="select-ship">Select spacecraft</button>
+        </div>
+      </div>
+    `;
+    this.hangar = new Hangar($('#ship-preview'), selected);
+    const refresh = () => {
+      const ship = SPACECRAFT.find((model) => model.id === selected);
+      const active = selected === this.game.settings.spacecraft;
+      $('#ship-selection').textContent = active
+        ? `${ship.name} is your selected spacecraft.`
+        : `Previewing ${ship.name}`;
+      $('#ship-preview').setAttribute('aria-label', `${ship.name} rotating 3D preview`);
+      $('#select-ship').textContent = active
+        ? `${ship.name} selected`
+        : `Select ${ship.name}`;
+      $('#select-ship').disabled = active;
+      document.querySelectorAll('[data-ship]').forEach((button) => {
+        button.setAttribute('aria-pressed', String(button.dataset.ship === selected));
+      });
+    };
+    document.querySelectorAll('[data-ship]').forEach((button) => {
+      button.onclick = () => {
+        selected = button.dataset.ship;
+        this.hangar.setModel(selected);
+        refresh();
+      };
+    });
+    $('#select-ship').onclick = () => {
+      this.game.settings.spacecraft = selected;
+      this.game.ship.setModel(selected);
+      this.game.storage.saveSettings(this.game.settings);
+      refresh();
+      this.toast(
+        this.game.storage.available
+          ? 'Spacecraft selected · Ready for your next flight'
+          : 'Spacecraft selected for this session · Browser storage is unavailable',
+      );
+    };
+    refresh();
   }
   map() {
     const g = this.game;
